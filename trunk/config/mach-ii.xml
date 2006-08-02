@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+
+<mach-ii version="1.0">
+
+	<!-- PROPERTIES -->
+	<properties>
+		<property name="applicationRoot" value="/cfcGenerator" />
+		<property name="defaultEvent" value="dsn.form" />
+		<property name="eventParameter" value="event" />
+		<property name="parameterPrecedence" value="form" />
+		<property name="maxEvents" value="10" />
+		<property name="exceptionEvent" value="exceptionEvent" />
+		
+		<!-- Application Properties -->
+		<property name="adminPass" value="conure" />
+	</properties>
+
+	<!-- LISTENERS -->
+	<listeners>
+		<listener name="generatorListener" type="cfcGenerator.model.generatorListener" />
+		<!--
+		<listener name="yourListenerName" type="fullyQualifiedDotDelimitedPathToCFC">
+			<invoker type="MachII.framework.invokers.CFCInvoker_Event" />
+			<parameters>
+				<parameter name="yourParameterName" value="yourParameterValue" />
+			</parameters>
+		</listener>
+		-->
+	</listeners>
+	
+	<!-- EVENT-FILTERS -->
+	<event-filters>
+		<event-filter name="RequiredFields" type="MachII.filters.RequiredFieldsFilter" />
+		<!--
+		<event-filter name="yourEventFilterName" type="fullyQualifiedDotDelimitedPathToCFC">
+			<parameters>
+				<parameter name="yourParameterName" value="yourParameterValue" />
+			</parameters>
+		</event-filter>
+		-->
+	</event-filters>
+
+	<!-- EVENT-HANDLERS -->
+	<event-handlers>
+		<event-handler event="layout" access="private">
+			<view-page name="layout" />
+		</event-handler>
+		
+		<event-handler event="dsn.form" access="public">
+			<notify listener="generatorListener" method="getDSNs" resultArg="DSNs" />
+			<view-page name="frm_DSN" contentKey="request.content" />
+			<announce event="layout" copyEventArgs="true" />
+		</event-handler>
+		<event-handler event="com.form" access="public">
+			<filter name="RequiredFields"> 
+			     <parameter name="requiredFields" value="dsn" /> 
+			     <parameter name="invalidEvent" value="dsn.form" /> 
+			</filter> 
+			<notify listener="generatorListener" method="getDSNs" resultArg="DSNs" />
+			<notify listener="generatorListener" method="getDatabaseType" resultArg="dbtype" />
+			<notify listener="generatorListener" method="getTables" resultArg="tables" />
+			<view-page name="frm_Components" contentKey="request.content" />
+			<announce event="layout" copyEventArgs="true" />
+		</event-handler>
+		<event-handler event="com.display" access="public">
+			<filter name="RequiredFields"> 
+			     <parameter name="requiredFields" value="dsn" /> 
+			     <parameter name="invalidEvent" value="dsn.form" /> 
+			</filter> 
+			<event-mapping event="exceptionEvent" mapping="dsn.form" />
+			<notify listener="generatorListener" method="getDSNs" resultArg="DSNs" />
+			<notify listener="generatorListener" method="getDatabaseType" resultArg="dbtype" />
+			<notify listener="generatorListener" method="getTables" resultArg="tables" />
+			<notify listener="generatorListener" method="getTableXML" resultArg="xmlTable" />
+			<notify listener="generatorListener" method="getGeneratedCFCs" resultArg="arrComponents" />
+			<view-page name="frm_Components" contentKey="request.content" />
+			<view-page name="dsp_Components" contentKey="request.content" append="true" />
+			<announce event="layout" copyEventArgs="true" />
+		</event-handler>
+		<event-handler event="exceptionEvent" access="private">
+			<view-page name="exception" contentKey="request.content" />
+			<announce event="layout" copyEventArgs="true" />
+		</event-handler>
+	</event-handlers>
+	
+	<!-- PAGE-VIEWS -->
+	<page-views>
+		<page-view name="layout" page="/views/layout.cfm" />
+		
+		<page-view name="frm_DSN" page="/views/frm_DSN.cfm" />
+		<page-view name="frm_Components" page="/views/frm_Components.cfm" />
+		<page-view name="dsp_Components" page="/views/dsp_Components.cfm" />
+		<page-view name="exception" page="/views/exception.cfm" />
+	</page-views>
+	
+	<!-- PLUGINS -->
+	<plugins>
+		<!-- <plugin name="TracePlugin" type="MachII.plugins.TracePlugin">
+			<parameters>
+				<parameter name="traceMode" value="display" />
+				<parameter name="displayCommented" value="false" />
+				<parameter name="highlightLongTimings" value="250" />
+			</parameters>
+		</plugin> -->
+		<!--
+		<plugin name="yourPluginName" type="fullyQualifiedDotDelimitedPathToCFC">
+			<parameters>
+				<parameter name="yourParameterName" value="yourParameterValue" />
+			</parameters>
+		</plugin>
+		-->
+	</plugins>
+
+</mach-ii>

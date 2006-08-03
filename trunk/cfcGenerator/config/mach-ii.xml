@@ -12,7 +12,7 @@
 		<property name="exceptionEvent" value="exceptionEvent" />
 		
 		<!-- Application Properties -->
-		<property name="adminPass" value="conure" />
+		<property name="adminPass" value="password" />
 	</properties>
 
 	<!-- LISTENERS -->

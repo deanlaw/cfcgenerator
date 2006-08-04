@@ -55,7 +55,7 @@
 		<!--- loop through each include and append it to the inner XSL --->
 		<cfloop from="1" to="#arrayLen(arguments.typeXML.xmlChildren)#" index="i">
 			<cffile action="read" file="#variables.usePath & arguments.typeXML.xmlName & '\' & arguments.typeXML.xmlChildren[i].xmlAttributes.file#" variable="tmpXSL" charset="utf-8" />
-			<cfset innerXSL = innerXSL & tmpXSL />
+			<cfset innerXSL = innerXSL & chr(13) & chr(13) & tmpXSL />
 		</cfloop>
 		<!--- read the base template --->
 		<cffile action="read" file="#variables.usePath & arguments.typeXML.xmlName & '.xsl'#" variable="tmpXSL" charset="utf-8" />

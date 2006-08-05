@@ -6,9 +6,10 @@
 	<cffunction name="configure" access="public" output="false" returntype="void">
 		<cfargument name="dsn" required="true" type="string" />
 		
+		<cfset var separator = getOSFileSeparator() />
 		<cfset variables.basePath = expandPath("./xsl/") />
 		<cfset variables.dsn = arguments.dsn />
-		<cfset variables.projectPath = variables.basePath & 'projects\' & variables.dsn & '\' />
+		<cfset variables.projectPath = variables.basePath & 'projects' & separator & variables.dsn & separator />
 		<cfset readConfig() />
 	</cffunction>
 	
@@ -51,10 +52,11 @@
 		<cfset var innerXSL = "" />
 		<cfset var tmpXSL = "" />
 		<cfset var i = 0 />
+		<cfset var separator = getOSFileSeparator() />
 		
 		<!--- loop through each include and append it to the inner XSL --->
 		<cfloop from="1" to="#arrayLen(arguments.typeXML.xmlChildren)#" index="i">
-			<cffile action="read" file="#variables.usePath & arguments.typeXML.xmlName & '\' & arguments.typeXML.xmlChildren[i].xmlAttributes.file#" variable="tmpXSL" charset="utf-8" />
+			<cffile action="read" file="#variables.usePath & arguments.typeXML.xmlName & separator & arguments.typeXML.xmlChildren[i].xmlAttributes.file#" variable="tmpXSL" charset="utf-8" />
 			<cfset innerXSL = innerXSL & chr(13) & chr(13) & tmpXSL />
 		</cfloop>
 		<!--- read the base template --->
@@ -62,4 +64,12 @@
 		<cfset returnXSL = replaceNoCase(trim(tmpXSL),"<!-- custom code -->",trim(innerXSL)) />
 		<cfreturn trim(returnXSL) />
 	</cffunction>
+	
+	<!--- code supplied by Luis Majano --->
+	<cffunction name="getOSFileSeparator" access="public" returntype="any" output="false" hint="Get the operating system's file separator character">
+        <cfscript>
+        var objFile =  createObject("java","java.lang.System");
+        return objFile.getProperty("file.separator");
+        </cfscript>
+    </cffunction>
 </cfcomponent>

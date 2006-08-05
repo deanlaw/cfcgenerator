@@ -66,8 +66,7 @@
 			<filter name="RequiredFields"> 
 			     <parameter name="requiredFields" value="dsn" /> 
 			     <parameter name="invalidEvent" value="dsn.form" /> 
-			</filter> 
-			<event-mapping event="exceptionEvent" mapping="dsn.form" />
+			</filter>
 			<notify listener="generatorListener" method="getDSNs" resultArg="DSNs" />
 			<notify listener="generatorListener" method="getDatabaseType" resultArg="dbtype" />
 			<notify listener="generatorListener" method="getTables" resultArg="tables" />

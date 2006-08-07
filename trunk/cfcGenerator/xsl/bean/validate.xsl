@@ -3,7 +3,7 @@
 		&lt;cfset var thisError = structNew() /&gt;
 		<xsl:for-each select="root/bean/dbtable/column">
 		&lt;!--- <xsl:value-of select="@name" /> ---&gt;
-		<xsl:if test="@required='Yes'">&lt;cfif (NOT len(trim(get<xsl:value-of select="@name" />())))&gt;
+		<xsl:if test="@required='Yes' and @identity != 'true'">&lt;cfif (NOT len(trim(get<xsl:value-of select="@name" />())))&gt;
 			&lt;cfset thisError.field = "<xsl:value-of select="@name" />" /&gt;
 			&lt;cfset thisError.type = "required" /&gt;
 			&lt;cfset thisError.message = "<xsl:value-of select="@name" /> is required" /&gt;

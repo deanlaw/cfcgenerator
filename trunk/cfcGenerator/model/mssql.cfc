@@ -195,77 +195,42 @@
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
 		<cfset var qTable = "" />
 		<!--- get table column info --->
-		<cfstoredproc datasource="#variables.dsn#" procedure="sp_columns">
-			<cfprocparam value="#variables.table#" cfsqltype="CF_SQL_VARCHAR" />
-			<cfprocresult name="qTable" />
-		</cfstoredproc>
-		<!--- 
-		TODO: WORKING ON UPDATING THE QUERY FOR SUPPORTING IDENTITY
+		<!--- This is a modified version of the query in sp_columns --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
 			SELECT
-			TABLE_QUALIFIER = convert(sysname,DB_NAME()),
-			TABLE_OWNER = convert(sysname,USER_NAME(o.uid)),
-			TABLE_NAME = convert(sysname,o.name),
-			COLUMN_NAME = convert(sysname,c.name),
-			d.DATA_TYPE,
-			convert (sysname,case
-				when t.xusertype > 255 then t.name
-				else d.TYPE_NAME collate database_default
-			end) TYPE_NAME,
-			convert(int,case
-				when d.DATA_TYPE in (6,7) then d.data_precision 		/* FLOAT/REAL */
-				else OdbcPrec(c.xtype,c.length,c.xprec)
-			end) "PRECISION",
-			convert(int,case
-				when type_name(d.ss_dtype) IN ('numeric','decimal') then	/* decimal/numeric types */
+				TABLE_NAME = convert(sysname,o.name),
+				COLUMN_NAME = convert(sysname,c.name),
+				convert (sysname,case
+					when t.xusertype > 255 then t.name
+					else d.TYPE_NAME collate database_default
+				end) TYPE_NAME,
+				convert(int,case
+					when type_name(d.ss_dtype) IN ('numeric','decimal') then	/* decimal/numeric types */
 					OdbcPrec(c.xtype,c.length,c.xprec)+2
-				else
+					else
 					isnull(d.length, c.length)
-			end) LENGTH,
-			SCALE = convert(smallint, OdbcScale(c.xtype,c.xscale)),
-			d.RADIX,
-			NULLABLE = convert(smallint, ColumnProperty (c.id, c.name, 'AllowsNull')),
-			REMARKS = convert(varchar(254),null),	/* Remarks are NULL */
-			COLUMN_DEF = text,
-			d.SQL_DATA_TYPE,
-			d.SQL_DATETIME_SUB,
-			CHAR_OCTET_LENGTH = isnull(d.length, c.length)+d.charbin,
-			ORDINAL_POSITION = convert(int,
-					   (
-						select count(*)
-						from syscolumns sc
-						where sc.id     =  c.id
-						  AND sc.number =  c.number
-						  AND sc.colid  <= c.colid
-					    )),
-			IS_NULLABLE = convert(varchar(254),
+				end) LENGTH,
+				NULLABLE = convert(smallint, ColumnProperty (c.id, c.name, 'AllowsNull')),
+				IS_NULLABLE = convert(varchar(254),
 				substring('NO YES',(ColumnProperty (c.id, c.name, 'AllowsNull')*3)+1,3)),
-			SS_DATA_TYPE = c.type
-		FROM
-			sysobjects o,
-			master.dbo.spt_datatype_info d,
-			systypes t,
-			syscolumns c
-			LEFT OUTER JOIN syscomments m on c.cdefault = m.id
-				AND m.colid = 1
-		WHERE
-			o.id = @table_id
+				CASE
+					WHEN columnProperty(object_id('#variables.table#'),convert(sysname,c.name), 'IsIdentity') > 0 THEN 'true'
+					ELSE 'false'
+				END AS [identity]
+			FROM	sysobjects o,
+				master.dbo.spt_datatype_info d,
+				systypes t,
+				syscolumns c
+				LEFT OUTER JOIN syscomments m on c.cdefault = m.id
+					AND m.colid = 1
+			WHERE	o.id = object_id('#variables.table#')
 			AND c.id = o.id
 			AND t.xtype = d.ss_dtype
 			AND c.length = isnull(d.fixlen, c.length)
-			AND (d.ODBCVer is null or d.ODBCVer = @ODBCVer)
 			AND (o.type not in ('P', 'FN', 'TF', 'IF') OR (o.type in ('TF', 'IF') and c.number = 0))
 			AND isnull(d.AUTO_INCREMENT,0) = isnull(ColumnProperty (c.id, c.name, 'IsIdentity'),0)
 			AND c.xusertype = t.xusertype
-			AND c.name like @column_name
-		ORDER BY 17
-		</cfquery> --->
-		<!---
-			CASE
-				WHEN columnProperty(object_id(col.TABLE_NAME), col.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
-				ELSE 'false'
-			END AS [identity]
-		--->
+		</cfquery>
 		<cfset variables.tableMetadata = qTable />
 	</cffunction>
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
@@ -289,6 +254,7 @@
 	<cffunction name="getTableXML" access="public" output="false" returntype="xml">
 		<cfset var xmlTable = "" />
 		<!--- convert the table data into an xml format --->
+		<!--- added listfirst to the sql_type because identity is sometimes appended --->
 		<cfxml variable="xmlTable">
 		<cfoutput>
 		<root>
@@ -296,8 +262,8 @@
 				<dbtable name="#variables.table#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
-							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.length EQ 35 AND listFind(variables.primaryKeyList,variables.tableMetadata.column_name)>uuid<cfelse>#translateDataType(variables.tableMetadata.type_name)#</cfif>"
-							cfSqlType="#translateCfSqlType(variables.tableMetadata.type_name)#"
+							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.length EQ 35 AND listFind(variables.primaryKeyList,variables.tableMetadata.column_name)>uuid<cfelse>#translateDataType(listFirst(variables.tableMetadata.type_name," "))#</cfif>"
+							cfSqlType="#translateCfSqlType(listFirst(variables.tableMetadata.type_name," "))#"
 							required="#yesNoFormat(variables.tableMetadata.nullable-1)#"
 							length="#variables.tableMetadata.length#"
 							primaryKey="#yesNoFormat(listFind(variables.primaryKeyList,variables.tableMetadata.column_name))#"

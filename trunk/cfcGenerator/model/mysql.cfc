@@ -207,7 +207,11 @@
 			CASE
 				WHEN CHARACTER_MAXIMUM_LENGTH IS NULL THEN 0
 				ELSE CHARACTER_MAXIMUM_LENGTH
-			END as length
+			END as length,
+			CASE
+				WHEN EXTRA = 'auto_increment' THEN 'true'
+				ELSE 'false'
+			END as identity
 			FROM information_schema.COLUMNS
 			WHERE TABLE_SCHEMA = Database() AND TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#variables.table#" />
 		</cfquery>
@@ -248,7 +252,8 @@
 							cfSqlType="#translateCfSqlType(variables.tableMetadata.type_name)#"
 							required="#yesNoFormat(variables.tableMetadata.nullable-1)#"
 							length="#variables.tableMetadata.length#"
-							primaryKey="#yesNoFormat(listFind(variables.primaryKeyList,variables.tableMetadata.column_name))#" />
+							primaryKey="#yesNoFormat(listFind(variables.primaryKeyList,variables.tableMetadata.column_name))#"
+							identity="#variables.tableMetadata.identity#" />
 				</cfloop>
 				</dbtable>
 			</bean>

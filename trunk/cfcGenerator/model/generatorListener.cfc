@@ -21,7 +21,7 @@
 		<cfset thisDSN = datasources[event.getArg("dsn")] />
 		<cfif thisDSN.driver eq "MSSQLServer">
 			<cfreturn "mssql" />
-		<cfelseif thisDSN.driver contains "MySQL">
+		<cfelseif thisDSN.driver contains "mySQL" or thisDSN.class contains "mySQL">
 			<cfreturn "mysql" />
 		</cfif>
 	</cffunction>
@@ -30,6 +30,7 @@
 		<cfargument name="event" type="MachII.framework.Event" required="yes" />
 		
 		<cfset var dbType = event.getArg("dbtype") />
+		<cfset var qryReturn = "" />
 		<cfset variables[dbtype].setDSN(event.getArg("dsn")) />
 		<cfreturn variables[dbtype].getTables() />
 	</cffunction>

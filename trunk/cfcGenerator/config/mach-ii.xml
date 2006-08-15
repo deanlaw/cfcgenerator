@@ -63,7 +63,7 @@
 			<announce event="layout" copyEventArgs="true" />
 		</event-handler>
 		<event-handler event="com.display" access="public">
-			<filter name="RequiredFields"> 
+			<filter name="RequiredFields">
 			     <parameter name="requiredFields" value="dsn" /> 
 			     <parameter name="invalidEvent" value="dsn.form" /> 
 			</filter>

@@ -197,7 +197,7 @@
 		<!--- get table column info --->
 		<!--- This is a modified version of the query in sp_columns --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
-			SELECT
+			SELECT DISTINCT
 				TABLE_NAME = convert(sysname,o.name),
 				COLUMN_NAME = convert(sysname,c.name),
 				convert (sysname,case

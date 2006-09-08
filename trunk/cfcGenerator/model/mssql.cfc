@@ -266,10 +266,6 @@
 			     c.name = index_col ('#variables.table#', i.indid, 16)
 			    )
 		</cfquery>
-		<cfstoredproc datasource="#variables.dsn#" procedure="sp_pkeys">
-			<cfprocparam value="#variables.table#" cfsqltype="CF_SQL_VARCHAR" />
-			<cfprocresult name="qPrimaryKeys" />
-		</cfstoredproc>
 		<cfset lstPrimaryKeys = valueList(qPrimaryKeys.column_name) />
 		<cfset variables.primaryKeyList = lstPrimaryKeys />
 	</cffunction>

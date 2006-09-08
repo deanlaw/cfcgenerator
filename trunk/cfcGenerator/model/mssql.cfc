@@ -240,6 +240,32 @@
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />
+		<cfquery name="qPrimaryKeys" datasource="#variables.dsn#">
+			select	COLUMN_NAME = convert(sysname,c.name),
+				PK_NAME = convert(sysname,i.name)
+			from	sysindexes i, syscolumns c, sysobjects o --, syscolumns c1
+			where	o.id = object_id('#variables.table#')
+			and 	o.id = c.id
+			and o.id = i.id
+			and (i.status & 0x800) = 0x800
+			and (c.name = index_col ('#variables.table#', i.indid,  1) or
+			     c.name = index_col ('#variables.table#', i.indid,  2) or
+			     c.name = index_col ('#variables.table#', i.indid,  3) or
+			     c.name = index_col ('#variables.table#', i.indid,  4) or
+			     c.name = index_col ('#variables.table#', i.indid,  5) or
+			     c.name = index_col ('#variables.table#', i.indid,  6) or
+			     c.name = index_col ('#variables.table#', i.indid,  7) or
+			     c.name = index_col ('#variables.table#', i.indid,  8) or
+			     c.name = index_col ('#variables.table#', i.indid,  9) or
+			     c.name = index_col ('#variables.table#', i.indid, 10) or
+			     c.name = index_col ('#variables.table#', i.indid, 11) or
+			     c.name = index_col ('#variables.table#', i.indid, 12) or
+			     c.name = index_col ('#variables.table#', i.indid, 13) or
+			     c.name = index_col ('#variables.table#', i.indid, 14) or
+			     c.name = index_col ('#variables.table#', i.indid, 15) or
+			     c.name = index_col ('#variables.table#', i.indid, 16)
+			    )
+		</cfquery>
 		<cfstoredproc datasource="#variables.dsn#" procedure="sp_pkeys">
 			<cfprocparam value="#variables.table#" cfsqltype="CF_SQL_VARCHAR" />
 			<cfprocresult name="qPrimaryKeys" />

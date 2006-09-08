@@ -19,7 +19,7 @@
 		<cfset var thisDSN = "" />
 
 		<cfset thisDSN = datasources[event.getArg("dsn")] />
-		<cfif thisDSN.driver eq "MSSQLServer">
+		<cfif thisDSN.driver eq "MSSQLServer"  or thisDSN.class contains "MSSQLServer">
 			<cfreturn "mssql" />
 		<cfelseif thisDSN.driver contains "mySQL" or thisDSN.class contains "mySQL">
 			<cfreturn "mysql" />

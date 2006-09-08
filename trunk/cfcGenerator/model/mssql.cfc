@@ -197,39 +197,22 @@
 		<!--- get table column info --->
 		<!--- This is a modified version of the query in sp_columns --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
-			SELECT DISTINCT
-				TABLE_NAME = convert(sysname,o.name),
-				COLUMN_NAME = convert(sysname,c.name),
-				convert (sysname,case
-					when t.xusertype > 255 then t.name
-					else d.TYPE_NAME collate database_default
-				end) TYPE_NAME,
-				convert(int,case
-					when type_name(d.ss_dtype) IN ('numeric','decimal') then	/* decimal/numeric types */
-					OdbcPrec(c.xtype,c.length,c.xprec)+2
-					else
-					isnull(d.length, c.length)
-				end) LENGTH,
-				NULLABLE = convert(smallint, ColumnProperty (c.id, c.name, 'AllowsNull')),
-				IS_NULLABLE = convert(varchar(254),
-				substring('NO YES',(ColumnProperty (c.id, c.name, 'AllowsNull')*3)+1,3)),
+			SELECT	c.COLUMN_NAME,
+				c.DATA_TYPE as TYPE_NAME,
 				CASE
-					WHEN columnProperty(object_id('#variables.table#'),convert(sysname,c.name), 'IsIdentity') > 0 THEN 'true'
+					WHEN ISNUMERIC(c.CHARACTER_MAXIMUM_LENGTH) = 1 THEN c.CHARACTER_MAXIMUM_LENGTH
+					ELSE 0
+					END as LENGTH,
+				CASE
+					WHEN c.IS_NULLABLE = 'No' THEN 0
+					ELSE 1
+				END as NULLABLE,
+				CASE
+					WHEN columnProperty(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
 					ELSE 'false'
-				END AS [identity]
-			FROM	sysobjects o,
-				master.dbo.spt_datatype_info d,
-				systypes t,
-				syscolumns c
-				LEFT OUTER JOIN syscomments m on c.cdefault = m.id
-					AND m.colid = 1
-			WHERE	o.id = object_id('#variables.table#')
-			AND c.id = o.id
-			AND t.xtype = d.ss_dtype
-			AND c.length = isnull(d.fixlen, c.length)
-			AND (o.type not in ('P', 'FN', 'TF', 'IF') OR (o.type in ('TF', 'IF') and c.number = 0))
-			AND isnull(d.AUTO_INCREMENT,0) = isnull(ColumnProperty (c.id, c.name, 'IsIdentity'),0)
-			AND c.xusertype = t.xusertype
+				END AS [IDENTITY]
+			FROM INFORMATION_SCHEMA.COLUMNS as c
+			WHERE c.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.table#" />
 		</cfquery>
 		<cfset variables.tableMetadata = qTable />
 	</cffunction>
@@ -241,30 +224,12 @@
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />
 		<cfquery name="qPrimaryKeys" datasource="#variables.dsn#">
-			select	COLUMN_NAME = convert(sysname,c.name),
-				PK_NAME = convert(sysname,i.name)
-			from	sysindexes i, syscolumns c, sysobjects o --, syscolumns c1
-			where	o.id = object_id('#variables.table#')
-			and 	o.id = c.id
-			and o.id = i.id
-			and (i.status & 0x800) = 0x800
-			and (c.name = index_col ('#variables.table#', i.indid,  1) or
-			     c.name = index_col ('#variables.table#', i.indid,  2) or
-			     c.name = index_col ('#variables.table#', i.indid,  3) or
-			     c.name = index_col ('#variables.table#', i.indid,  4) or
-			     c.name = index_col ('#variables.table#', i.indid,  5) or
-			     c.name = index_col ('#variables.table#', i.indid,  6) or
-			     c.name = index_col ('#variables.table#', i.indid,  7) or
-			     c.name = index_col ('#variables.table#', i.indid,  8) or
-			     c.name = index_col ('#variables.table#', i.indid,  9) or
-			     c.name = index_col ('#variables.table#', i.indid, 10) or
-			     c.name = index_col ('#variables.table#', i.indid, 11) or
-			     c.name = index_col ('#variables.table#', i.indid, 12) or
-			     c.name = index_col ('#variables.table#', i.indid, 13) or
-			     c.name = index_col ('#variables.table#', i.indid, 14) or
-			     c.name = index_col ('#variables.table#', i.indid, 15) or
-			     c.name = index_col ('#variables.table#', i.indid, 16)
-			    )
+			SELECT ccu.COLUMN_NAME,ccu.CONSTRAINT_NAME AS PK_NAME
+			FROM INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu
+				INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+				ON ccu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
+			AND 	ccu.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.table#" />
+			AND	tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
 		</cfquery>
 		<cfset lstPrimaryKeys = valueList(qPrimaryKeys.column_name) />
 		<cfset variables.primaryKeyList = lstPrimaryKeys />

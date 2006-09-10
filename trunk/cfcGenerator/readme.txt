@@ -16,4 +16,6 @@ The code is generated off a set of stylesheets located in the /xsl/ folder. This
 
 You can override the stylesheets used by a specific DSN. The custom stylesheets should be placed in a subfolder of /xsl/projects/ with the same name as your ColdFusion DSN. You will find a copy of the core files in there under the prototype folder that you can copy or rename. By default, if a folder exists for a given DSN, the system will generate off those. You will need a seperate yac.xml file for each custom project.
 
+Special thanks to Beth Bowden for contributing Oracle support.
+
 If you need assistance or would like to contribute to this project, email brian.rinaldi@gmail.com

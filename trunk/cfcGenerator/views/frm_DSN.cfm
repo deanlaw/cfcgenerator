@@ -5,8 +5,10 @@
 <cfform action="index.cfm?event=com.form" method="post" format="xml" skin="lightgray">
 	<cfselect name="dsn" label="Choose a datasource">
 		<cfloop collection="#DSNs#" item="ds">
-		<!--- only mssql or mysql for now --->
-		<cfif ((DSNs[ds].driver eq "MSSQLServer")  or (DSNs[ds].class contains "MSSQLServer")) or ((DSNs[ds].driver contains "mySQL") or (DSNs[ds].class contains "mySQL"))>
+		<!--- only oracle, mssql or mysql for now --->
+		<cfif ((DSNs[ds].driver eq "MSSQLServer")  or (DSNs[ds].class contains "MSSQLServer")) 
+       or ((DSNs[ds].driver contains "mySQL") or (DSNs[ds].class contains "mySQL"))
+       or ((DSNs[ds].driver contains "Oracle") or (DSNs[ds].class contains "Oracle"))>
 			<option value="#ds#">#DSNs[ds].name#</option>
 		</cfif>
 		</cfloop>
@@ -15,5 +17,5 @@
 </cfform>
 </cfoutput>
 <cfelse>
-<p>You have no MySQL or MSSQL DSNs.</p>
+<p>You have no Oracle, MySQL or MSSQL DSNs.</p>
 </cfif>

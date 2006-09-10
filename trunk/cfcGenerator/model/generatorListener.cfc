@@ -4,6 +4,7 @@
 		<cfset variables.adminAPIService = createObject("component","cfcGenerator.model.adminAPIService").init(variables.getProperty("adminPass")) />
 		<cfset variables.mysql = createObject("component","cfcGenerator.model.mysql").init() />
 		<cfset variables.mssql = createObject("component","cfcGenerator.model.mssql").init() />
+		<cfset variables.oracle = createObject("component","cfcGenerator.model.oracle").init() />
 		<cfset variables.xsl = createObject("component","cfcGenerator.model.xslService").init() />
 	</cffunction>
 
@@ -23,6 +24,8 @@
 			<cfreturn "mssql" />
 		<cfelseif thisDSN.driver contains "mySQL" or thisDSN.class contains "mySQL">
 			<cfreturn "mysql" />
+		<cfelseif thisDSN.driver contains "Oracle" or thisDSN.class contains "Oracle">
+			<cfreturn "Oracle" />
 		</cfif>
 	</cffunction>
 	

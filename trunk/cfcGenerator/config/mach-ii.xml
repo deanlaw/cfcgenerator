@@ -13,6 +13,7 @@
 		
 		<!-- Application Properties -->
 		<property name="adminPass" value="password" />
+		<property name="xslBasePath" value="./xsl/" />
 	</properties>
 
 	<!-- LISTENERS -->

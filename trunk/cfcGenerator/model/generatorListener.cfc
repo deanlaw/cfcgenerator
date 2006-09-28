@@ -52,7 +52,7 @@
 		<cfargument name="event" type="MachII.framework.Event" required="yes" />
 		
 		<!--- configure the xsl component with the dsn --->
-		<cfset variables.xsl.configure(event.getArg("dsn")) />
+		<cfset variables.xsl.configure(event.getArg("dsn"),variables.getProperty("xslBasePath")) />
 		<!--- get an array containing the generated code --->
 		<cfreturn variables.xsl.getComponents(event.getArg("xmlTable")) />
 	</cffunction>

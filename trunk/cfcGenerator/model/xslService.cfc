@@ -5,9 +5,10 @@
 	
 	<cffunction name="configure" access="public" output="false" returntype="void">
 		<cfargument name="dsn" required="true" type="string" />
+		<cfargument name="basePath" required="true" type="string" />
 		
 		<cfset var separator = getOSFileSeparator() />
-		<cfset variables.basePath = expandPath("./xsl/") />
+		<cfset variables.basePath = expandPath(arguments.basePath) />
 		<cfset variables.dsn = arguments.dsn />
 		<cfset variables.projectPath = variables.basePath & 'projects' & separator & variables.dsn & separator />
 		<cfset readConfig() />

@@ -15,6 +15,7 @@
 			&lt;/cfquery&gt;
 			&lt;cfcatch type="database"&gt;
 				&lt;!--- leave the bean as is ---&gt;
+				&lt;cfset qRead = queryNew("id") /&gt;
 			&lt;/cfcatch&gt;
 		&lt;/cftry&gt;
 		&lt;cfif qRead.recordCount&gt;

@@ -33,7 +33,8 @@
 		<cfset arrayAppend(arrTemplateFolders,"default") />
 		<cfdirectory name="qryTemplateFolders" action="list" directory="#expandPath(variables.xslBasePath&'projects')#" />
 		<cfloop query="qryTemplateFolders">
-			<cfif qryTemplateFolders.type eq "Dir">
+			<!--- only directories and not svn directory if you pulled this from svn --->
+			<cfif qryTemplateFolders.type eq "Dir" and qryTemplateFolders.name neq ".svn">
 				<cfset arrayAppend(arrTemplateFolders,qryTemplateFolders.name) />
 			</cfif>
 		</cfloop>

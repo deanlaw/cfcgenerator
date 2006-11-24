@@ -66,6 +66,9 @@
 			<cfcase value="decimal">
 				<cfreturn "cf_sql_decimal" />
 			</cfcase>
+			<cfcase value="double">
+				<cfreturn "cf_sql_numeric" />
+			</cfcase>
 			<cfcase value="float">
 				<cfreturn "cf_sql_float" />
 			</cfcase>
@@ -89,6 +92,9 @@
 			</cfcase>
 			<cfcase value="nvarchar">
 				<cfreturn "cf_sql_varchar" />
+			</cfcase>
+			<cfcase value="longtext">
+				<cfreturn "cf_sql_text" />
 			</cfcase>
 			<cfcase value="real">
 				<cfreturn "cf_sql_real" />
@@ -125,79 +131,85 @@
 	
 	<cffunction name="translateDataType" hint="I translate the MSSQL data type names into ColdFusion data type names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-		
+	
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="binary">
-				<cfreturn "binary" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="bit">
-				<cfreturn "boolean" />
+				<cfreturn "Boolean" />
 			</cfcase>
 			<cfcase value="char">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="datetime">
-				<cfreturn "date" />
+				<cfreturn "Date" />
 			</cfcase>
 			<cfcase value="decimal">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
+			</cfcase>
+			<cfcase value="double">
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="float">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="image">
-				<cfreturn "binary" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="int">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="money">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="nchar">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="ntext">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="numeric">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="nvarchar">
-				<cfreturn "string" />
+				<cfreturn "String" />
+			</cfcase>
+			<cfcase value="longtext">
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="real">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="smalldatetime">
-				<cfreturn "date" />
+				<cfreturn "Date" />
 			</cfcase>
 			<cfcase value="smallint">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="smallmoney">
-				<cfreturn "numeric" />
+				<cfreturn "Number" />
 			</cfcase>
 			<cfcase value="text">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="timestamp">
-				<cfreturn "numeric" />
+				<cfreturn "Date" />
 			</cfcase>
 			<cfcase value="tinyint">
-				<cfreturn "numeric" />
+				<cfreturn "Boolean" />
 			</cfcase>
 			<cfcase value="uniqueidentifier">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="varbinary">
-				<cfreturn "binary" />
+				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="varchar">
-				<cfreturn "string" />
+				<cfreturn "String" />
 			</cfcase>
 		</cfswitch>
 	</cffunction>

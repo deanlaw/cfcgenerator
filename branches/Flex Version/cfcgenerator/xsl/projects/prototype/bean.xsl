@@ -4,6 +4,8 @@
 	<xsl:output method="text" indent="no"  />
 		<xsl:template match="/">
 &lt;cfcomponent displayname="<xsl:value-of select="//bean/@name"/>" output="false"&gt;
+		<xsl:for-each select="root/bean/dbtable/column">&lt;cfproperty name="<xsl:value-of select="@name" />" type="<xsl:value-of select="@type" />" default="" /&gt;
+		</xsl:for-each>
 	&lt;!---
 	PROPERTIES
 	---&gt;

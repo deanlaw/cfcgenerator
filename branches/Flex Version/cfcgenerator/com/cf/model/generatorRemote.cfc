@@ -36,7 +36,15 @@
 		<cfargument name="table" type="string" required="yes" />
 		<cfargument name="projectPath" type="string" required="no" default="" />
 		<cfargument name="stripLineBreaks" type="boolean" required="no" default="false" />
+		<cfargument name="rootPath" type="string" required="no" default="" />
 		
 		<cfreturn application.generatorService.getGeneratedCFCs(argumentCollection=arguments) />
+	</cffunction>
+	
+	<cffunction name="saveFile" access="remote" returntype="string" output="false">
+		<cfargument name="code" type="string" required="yes" />
+		<cfargument name="filePath" type="string" required="yes" />
+		
+		<cfreturn application.generatorService.saveFile(arguments.code,arguments.filePath) />
 	</cffunction>
 </cfcomponent>

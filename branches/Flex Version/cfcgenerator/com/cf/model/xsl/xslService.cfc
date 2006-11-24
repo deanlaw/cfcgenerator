@@ -7,11 +7,17 @@
 		<cfargument name="dsn" required="true" type="string" />
 		<cfargument name="basePath" required="true" type="string" />
 		<cfargument name="projectPath" type="string" required="no" default="" />
+		<cfargument name="rootPath" required="no" type="string" default="" />
 		
 		<cfset var separator = getOSFileSeparator() />
 		<cfset variables.basePath = expandPath(arguments.basePath) />
 		<cfset variables.dsn = arguments.dsn />
 		<cfset variables.projectPath = variables.basePath & 'projects' & separator & arguments.projectPath & separator />
+		<cfif len(arguments.rootPath)>
+			<cfset variables.rootPath = expandPath(arguments.rootPath) />
+		<cfelse>
+			<cfset variables.rootPath = "" />
+		</cfif>
 		<cfset readConfig() />
 	</cffunction>
 	
@@ -19,9 +25,11 @@
 		<cfargument name="xmlTable" required="true" type="xml" />
 		
 		<cfset var i = 0 />
+		<cfset var separator = getOSFileSeparator() />
 		<cfset var xsl = "" />
 		<cfset var name = "" />
 		<cfset var content = "" />
+		<cfset var thisRootPath = "" />
 		<cfset var objPage = "" />
 		<cfset var arrComponents = arrayNew(1) />
 		<!--- loop through cfc types --->
@@ -29,12 +37,15 @@
 			<cfset xsl = buildXSL(variables.config.generator.xmlChildren[i]) />
 			<cfset name = variables.config.generator.xmlChildren[i].xmlName />
 			<cfset content = xmlTransform(arguments.xmlTable,xsl) />
-			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.xsl.generatedPage").init(name,xsl,trim(content)) />
+			<cfset thisRootPath = "" />
+			<cfif len(rootPath) and structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileType")>
+				<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+			</cfif>
+			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.xsl.generatedPage").init(name,xsl,content,thisRootPath) />
 			<cfset arrayAppend(arrComponents,objPage) />
 		</cfloop>
 		<cfreturn arrComponents />
 	</cffunction>
-	
 	
 	<cffunction name="readConfig" access="private" output="false" returntype="void">		
 		<cfset var configXML = "" />

@@ -2,15 +2,18 @@
 	<cfproperty name="pageName" type="string" required="false" default="" />
 	<cfproperty name="xsl" type="string" required="false" default="" />
 	<cfproperty name="content" type="string" required="false" default="" />
+	<cfproperty name="filePath" type="string" required="false" default="" />
 	
 	<cffunction name="init" access="public" output="false" returntype="generatedPage">
 		<cfargument name="pageName" type="string" required="false" default="" />
 		<cfargument name="xsl" type="string" required="false" default="" />
 		<cfargument name="content" type="string" required="false" default="" />
+		<cfargument name="filePath" type="string" required="false" default="" />
 		
 		<cfset setPageName(arguments.pageName) />
 		<cfset setXsl(arguments.xsl) />
 		<cfset setContent(arguments.content) />
+		<cfset setFilePath(arguments.filePath) />
 		<cfreturn this />
 	</cffunction>
 	
@@ -39,5 +42,14 @@
 	</cffunction>
 	<cffunction name="getContent" access="public" output="false" returntype="string">
 		<cfreturn variables.content />
+	</cffunction>
+	
+	<cffunction name="setFilePath" access="public" output="false" returntype="void">
+		<cfargument name="filePath" type="string" required="false" default="" />
+		
+		<cfset variables.filePath = arguments.filePath />
+	</cffunction>
+	<cffunction name="getFilePath" access="public" output="false" returntype="string">
+		<cfreturn variables.filePath />
 	</cffunction>
 </cfcomponent>

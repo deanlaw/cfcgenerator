@@ -7,7 +7,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getTables" access="public" output="false" returntype="query">
+	<cffunction name="getTables" access="public" output="false" returntype="array">
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />

@@ -9,8 +9,7 @@ The following are requirements to run this project.
 = Details =
 
   * ColdFusion MX 7.0.2 - Flash Remoting support must be enabled under Data & Services Flex
-Integration
-	- NOTE: This component utlizes the adminAPI, so you must have access to the
-		local ColdFusion server administrator password.
+Integration - NOTE: This component utlizes the adminAPI, so you must have access to the
+local ColdFusion server administrator password.
   * Currently supports MySQL 5 (possibly 4.1 but it has not been tested) and MSSQL 2000/2005
 and Oracle (contributed by Beth Bowden)

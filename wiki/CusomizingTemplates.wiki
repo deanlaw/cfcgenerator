@@ -1,10 +1,9 @@
-#summary One-sentence summary of this page.
+#summary How to create custom templates.
 #labels Phase-Support
 
 = Introduction =
 
-Add your content here.
-
+How to create custom templates.
 
 = Details =
 

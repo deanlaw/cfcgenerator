@@ -19,11 +19,11 @@ To generate templates:
   # Select the table from the list of tables.
   # Optionally, choose a different template to generate against.
   # Required, specify the default dot notation cfc path (i.e. com.user.user for
-    /com/user/user.cfc)
+  /com/user/user.cfc)
   # Optionally, specify a relative site root system path (this is required to activate the
-    save file capability)
+  save file capability)
   # Optionally, check "Strip extra line breaks" if the generated code displays with extra
-    line breaks
+  line breaks
   # Click Generate
 
 Once the code generates, you will receive a set of tabs relating to each item you

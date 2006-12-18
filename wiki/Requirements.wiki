@@ -1,5 +1,5 @@
 #summary List software and other requirements for running this project.
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Introduction =
 

@@ -8,5 +8,5 @@
 			</xsl:if>&lt;cfset <xsl:value-of select="//bean/@name"/>.set<xsl:value-of select="@name" />(arguments.<xsl:value-of select="@name" />) /&gt;
 		<xsl:if test="@required='No'">&lt;/cfif&gt;
 		</xsl:if>
-		</xsl:for-each>&lt;cfreturn variables.<xsl:value-of select="//bean/@name"/>DAO.save(arguments.<xsl:value-of select="//bean/@name"/>) /&gt;
+		</xsl:for-each>&lt;cfreturn variables.<xsl:value-of select="//bean/@name"/>DAO.save(<xsl:value-of select="//bean/@name"/>) /&gt;
 	&lt;/cffunction&gt;

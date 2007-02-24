@@ -134,7 +134,7 @@
 	
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="binary">
 				<cfreturn "String" />
@@ -149,22 +149,22 @@
 				<cfreturn "Date" />
 			</cfcase>
 			<cfcase value="decimal">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="double">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="float">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="image">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="int">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="money">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="nchar">
 				<cfreturn "String" />
@@ -173,7 +173,7 @@
 				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="numeric">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="nvarchar">
 				<cfreturn "String" />
@@ -182,16 +182,16 @@
 				<cfreturn "String" />
 			</cfcase>
 			<cfcase value="real">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="smalldatetime">
 				<cfreturn "Date" />
 			</cfcase>
 			<cfcase value="smallint">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="smallmoney">
-				<cfreturn "Number" />
+				<cfreturn "Numeric" />
 			</cfcase>
 			<cfcase value="text">
 				<cfreturn "String" />

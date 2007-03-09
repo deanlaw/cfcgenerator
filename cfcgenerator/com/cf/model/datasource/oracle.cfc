@@ -193,7 +193,7 @@
                   /* Oracle has no equivalent to autoincrement or  identity */
                   'false'                     AS "IDENTITY",                    
                   CASE
-                        WHEN col.NULLABLE = 'Y' THEN 1
+                        WHEN col.NULLABLE = 'Y' AND col.DATA_DEFAULT IS NULL THEN 1 /* a column is defined as nullable only if it doesn't have a default */
                         ELSE 0
                   END                  as NULLABLE,
                  col.DATA_TYPE         as TYPE_NAME,

@@ -1,3 +1,8 @@
-<!--- <cfdump var="#createObject('component','cfcgeneratorFlex.com.cf.model.generatorRemote').getDSNs()#"> --->
-<cfdirectory name="qryTemplateFolders" action="list" directory="#expandPath('/cfcgeneratorFLEX/xsl/projects')#" />
-<cfdump var="#qryTemplateFolders#">
+<cfset dsns = application.generatorService.getDsns() />
+
+<cfdump var="#dsns#">
+
+<cfif arrayLen(dsns)>
+	<cfset tables = application.generatorService.getTables(dsns[1].getDsnName()) />
+	<cfdump var="#tables#">
+</cfif>

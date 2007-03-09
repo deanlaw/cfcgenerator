@@ -212,7 +212,7 @@
 					ELSE 0
 					END as LENGTH,
 				CASE
-					WHEN c.IS_NULLABLE = 'No' THEN 0
+					WHEN c.IS_NULLABLE = 'No' AND c.Column_Default IS NULL THEN 0 /* a column is defined as nullable only if it doesn't have a default */
 					ELSE 1
 				END as NULLABLE,
 				CASE

@@ -28,6 +28,7 @@
 		<cfset var separator = getOSFileSeparator() />
 		<cfset var xsl = "" />
 		<cfset var name = "" />
+		<cfset var filename = "" />
 		<cfset var content = "" />
 		<cfset var thisRootPath = "" />
 		<cfset var objPage = "" />
@@ -39,7 +40,12 @@
 			<cfset content = xmlTransform(arguments.xmlTable,xsl) />
 			<cfset thisRootPath = "" />
 			<cfif len(rootPath) and structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileType")>
-				<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+				<!--- if text to append to file name is specified use it otherwise default to the object type name --->
+				<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileNameAppend")>
+					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[i].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+				<cfelse>
+					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+				</cfif>
 			</cfif>
 			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.xsl.generatedPage").init(name,xsl,content,thisRootPath) />
 			<cfset arrayAppend(arrComponents,objPage) />

@@ -4,10 +4,78 @@
 		<cfargument name="dsn" type="string" required="true" />
 		
 		<cfset setDSN(arguments.dsn) />
+		<cfset isMySQL5plus() />
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="isMySQL5plus" access="private" output="false" returntype="boolean">
+		<!--- a simple test to see if the information_schema exists --->
+		<cfset var qTestMySQL = "" />
+		<cfset var rtnValue = true />
+		<cfif not isDefined("variables.isMySQL5plusVar")>
+			<cftry>
+				<cfquery name="qTestMySQL" datasource="#variables.dsn#">
+					SELECT 0 FROM INFORMATION_SCHEMA.columns LIMIT 1
+				</cfquery>
+				<cfcatch type="database">
+					<cfset rtnValue = false />
+				</cfcatch>
+			</cftry>
+			<cfset variables.isMySQL5plusVar = rtnValue />
+		<cfelse>
+			<cfset rtnValue = variables.isMySQL5plusVar />
+		</cfif>
+		<cfreturn rtnValue />
+	</cffunction>
+	
 	<cffunction name="getTables" access="public" output="false" returntype="array">
+		<cfif isMySQL5Plus()>
+			<cfreturn getTables_5() />
+		<cfelse>
+			<cfreturn getTables_41() />
+		</cfif>
+	</cffunction>
+	
+	<!--- MySQL 4.1 support thanks to Josh Nathanson --->
+	<cffunction name="getTables_41" access="private" output="false" returntype="array">
+		<cfset var qStatus = "" />
+		<cfset var qDB = "" />
+		<cfset var getDBname = "" />
+		<cfset var qAllTables = "" />
+		<cfset objTable = "" />
+		<cfset arrReturn = arrayNew(1) />
+		
+		<cfif not len(variables.dsn)>
+			<cfthrow errorcode="you must provide a dsn" />
+		</cfif>
+		
+		<cfquery name="qStatus" datasource="#variables.dsn#">
+		SHOW TABLE STATUS
+		</cfquery>
+
+		<cfquery name="qDB" datasource="#variables.dsn#">
+		SHOW OPEN TABLES
+		</cfquery>
+
+		<cfquery name="getDBname" dbtype="query">
+		SELECT Database AS db FROM qDB
+		GROUP BY Database
+		</cfquery>
+
+		<cfquery name="qAllTables" dbtype="query">
+		SELECT '#getDBname.db#' as DATABASE_NAME, '#getDBname.db#' AS TABLE_SCHEMA, Name AS TABLE_NAME, Engine AS TABLE_TYPE
+			FROM qStatus
+		</cfquery>
+
+		<cfloop query="qAllTables">
+			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.table_name,qAllTables.table_type) />
+			<cfset arrayAppend(arrReturn,objTable) />
+		</cfloop>
+		<cfreturn arrReturn />
+	</cffunction>
+	<!------------------------>
+	
+	<cffunction name="getTables_5" access="public" output="false" returntype="array">
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />
@@ -44,7 +112,7 @@
 	</cffunction>
 	
 	<!--- these functions are modified from reactor v0.1 --->
-	<cffunction name="translateCfSqlType" hint="I translate the MSSQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
+	<cffunction name="translateCfSqlType" hint="I translate the MySQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
 		
 		<cfswitch expression="#arguments.typeName#">
@@ -215,6 +283,13 @@
 	</cffunction>
 	
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
+		<cfif isMySQL5plus()>
+			<cfset setTableMetadata_5() />
+		<cfelse>
+			<cfset setTableMetadata_41() />
+		</cfif>
+	</cffunction>
+	<cffunction name="setTableMetadata_5" access="private" output="false" returntype="void">
 		<cfset var qTable = "" />
 		<!--- get table column info, borrowed from Reactor --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
@@ -237,6 +312,52 @@
 		</cfquery>
 		<cfset variables.tableMetadata = qTable />
 	</cffunction>
+	<!--- MySQL 4.1 support thanks to Josh Nathanson --->
+	<cffunction name="setTableMetadata_41" access="private" output="false" returntype="void">
+		<cfset var qTable_pre = "" />
+		<cfset var qTable = "" />
+		<cfset var lgth = "" />
+		<cfset var typ = "" />
+		<cfset var lgth_str = "" />
+
+		<cfquery name="qTable_pre" datasource= "#variables.dsn#">
+			DESCRIBE #variables.table#
+		</cfquery>
+
+		<cfset qTable = QueryNew("COLUMN_NAME, nullable, type_name, length, identity")>
+
+		<cfoutput query="qTable_pre">
+			<!--- set type and length --->
+			<cfset lgth = REFind("[0-9]+",Type,1,true)>
+			<cfset typ = REFind("[a-zA-Z]+",Type,1,true)>
+			<cfif lgth.len[1]> 
+			<!--- if lgth is found by REFind, return struct - lgth.len[1] will be nonzero --->
+				<cfset lgth_str = Mid(Type,lgth.pos[1],lgth.len[1])>
+			<cfelse>
+				<cfset lgth_str = "0">
+			</cfif>
+			<cfset typ_str = Mid(Type,typ.pos[1],typ.len[1])> <!--- there will always be a type --->
+		
+			<cfset QueryAddRow(qTable)>
+			<cfset QuerySetCell(qTable,"COLUMN_NAME",Field)>
+			<cfif Null is "Yes">
+				<cfset QuerySetCell(qTable, "nullable", "true")>
+			<cfelse>
+				<cfset QuerySetCell(qTable, "nullable", "false")>
+			</cfif>
+			<cfset QuerySetCell(qTable, "type_name", typ_str)>
+			<cfset QuerySetCell(qTable, "length", lgth_str)>
+			<cfif Extra is "auto_increment">
+				<cfset QuerySetCell(qTable, "identity", "true")>
+			<cfelse>
+				<cfset QuerySetCell(qTable, "identity", "false")>
+			</cfif>
+	
+		</cfoutput>
+
+		<cfset variables.tableMetadata = qTable />
+	</cffunction>
+	<!------------------------>
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>

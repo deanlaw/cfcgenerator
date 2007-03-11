@@ -14,7 +14,10 @@
 		<cfset var objDatasource = "" />
 		<cfset var thisDSN = "" />
 		<cfset var thisType = "" />
-		<cfloop collection="#dsns#" item="thisDSN">
+		<cfset var sortedDSNs = structSort(dsns,"textnocase","asc","name") />
+		<cfset var i = 0 />
+		<cfloop from="1" to="#arrayLen(sortedDSNs)#" index="i">
+			<cfset thisDSN = sortedDSNs[i] />
 			<cfset thisType = driverOrClassToType(dsns[thisDSN]) />
 			<cfif len(thisType)>
 				<cfset objDatasource = createObject("component","cfcgenerator.com.cf.model.datasource.datasource").init(dsns[thisDSN].name,thisType) />

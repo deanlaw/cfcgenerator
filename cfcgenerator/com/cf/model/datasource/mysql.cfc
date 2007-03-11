@@ -363,6 +363,13 @@
 	</cffunction>
 	
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
+		<cfif isMySQL5plus()>
+			<cfset setPrimaryKeyList_5() />
+		<cfelse>
+			<cfset setPrimaryKeyList_41() />
+		</cfif>
+	</cffunction>
+	<cffunction name="setPrimaryKeyList_5" access="public" output="false" returntype="void">
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />
 		<cfquery name="qPrimaryKeys" datasource="#variables.dsn#">
@@ -375,6 +382,25 @@
 		<cfset lstPrimaryKeys = valueList(qPrimaryKeys.column_name) />
 		<cfset variables.primaryKeyList = lstPrimaryKeys />
 	</cffunction>
+	<!--- MySQL 4.1 support thanks to Josh Nathanson --->
+	<cffunction name="setPrimaryKeyList_41" access="public" output="false" returntype="void">
+		<cfset var qPrimaryKeys_pre = "" />
+		<cfset var qPrimaryKeys = "" />
+		<cfset var lstPrimaryKeys = "" />
+		
+		<cfquery name="qPrimaryKeys_pre" datasource= "#variables.dsn#">
+		DESCRIBE #variables.table#
+		</cfquery>
+		
+		<cfquery name="qPrimaryKeys" dbtype="query">
+		SELECT Field AS COLUMN_NAME FROM qPrimaryKeys_pre
+		WHERE [Key] = <cfqueryparam cfsqltype="cf_sql_varchar" value="PRI" />
+		</cfquery>
+
+		<cfset lstPrimaryKeys = valueList(qPrimaryKeys.column_name) />
+		<cfset variables.primaryKeyList = lstPrimaryKeys />
+	</cffunction>
+	<!------------------------>
 	<cffunction name="getPrimaryKeyList" access="public" output="false" returntype="string">
 		<cfreturn variables.primaryKeyList />
 	</cffunction>

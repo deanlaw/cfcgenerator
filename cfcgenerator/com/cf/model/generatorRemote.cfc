@@ -9,7 +9,13 @@
 		<cfset variables.adminAPIFacade = createObject("component","cfcgenerator.com.cf.model.adminAPI.adminAPIFacade").init(variables.adminPass) />
 		<cfset variables.xsl = createObject("component","cfcgenerator.com.cf.model.xsl.xslService").init() />
 	</cffunction> --->
-
+	
+	<cffunction name="setAdminPassword" access="public" returntype="boolean" output="false">
+		<cfargument name="adminPass" type="string" required="true" />
+		
+		<cfreturn application.generatorService.setAdminPassword(arguments.adminPass) />
+	</cffunction>
+	
 	<cffunction name="getDSNs" access="remote" returntype="array" output="false">
 		<cfreturn application.generatorService.getDSNs() />
 	</cffunction>

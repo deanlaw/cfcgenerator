@@ -1,8 +1,14 @@
-<cfset dsns = application.generatorService.getDsns() />
+<cfset loggedIn = application.generatorService.setAdminPassword("password")>
 
-<cfdump var="#dsns#">
-
-<cfif arrayLen(dsns)>
-	<cfset tables = application.generatorService.getTables(dsns[1].getDsnName()) />
-	<cfdump var="#tables#">
+<cfif loggedIn>
+	<cfset dsns = application.generatorService.getDsns() />
+	
+	<cfdump var="#dsns#">
+	
+	<cfif arrayLen(dsns)>
+		<cfset tables = application.generatorService.getTables(dsns[1].getDsnName()) />
+		<cfdump var="#tables#">
+	</cfif>
+<cfelse>
+	failed.
 </cfif>

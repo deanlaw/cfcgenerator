@@ -5,14 +5,13 @@ REQUIREMENTS
 * ColdFusion MX 7.0.2 - Flash Remoting support must be enabled under Data & Services Flex Integration
 	- NOTE: This component utlizes the adminAPI, so you must have access to the
 		local ColdFusion server administrator password.
-* Currently supports MySQL 5 (possibly 4.1 but it has not been tested) and MSSQL 2000/2005 and Oracle (contributed by Beth Bowden)
+* Currently supports MySQL 4.1 and 5 and MSSQL 2000/2005 and Oracle (contributed by Beth Bowden)
 
 Installation:
 1) Copy the contents into a directory name "cfcgenerator" under your web root
 	- NOTE:	If you need to place it elsewhere, a mapping should work, 
 		but you will need to edit your [webroot]\web-inf\flex\services-config.xml
 		and set <use-mappings>true</use-mappings>
-2) Set your ColdFusion administrator password as the value of adminPass in Application.cfm
 3) That's it!
 
 ABOUT
@@ -21,7 +20,7 @@ The Illudium PU-36 Code Generator uses database metadata that it converts into a
 
 USING THE GENERATOR
 ----------------------------------------------------------
-When the generator initially loads it should automatically populate several select boxes. The first is available DSNs (for supported dbms see above). Once the DSN loads, the tables select should populate with a list of tables within that DSN. Lastly, the templates select should populate with all available xsl template options (for tips on how to customize templates, see below).
+When the generator initially loads it will prompt you for your ColdFusion administrator password, after which it should automatically populate several select boxes. The first is available DSNs (for supported dbms see above). Once the DSN loads, the tables select should populate with a list of tables within that DSN. Lastly, the templates select should populate with all available xsl template options (for tips on how to customize templates, see below).
 
 To generate templates:
 

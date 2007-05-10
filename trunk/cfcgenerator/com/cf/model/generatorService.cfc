@@ -1,13 +1,31 @@
 <cfcomponent output="false">
 	<cffunction name="init" access="public" returntype="generatorService" output="false">
 		<cfargument name="xslBasePath" type="string" required="true" />
-		<cfargument name="adminPass" type="string" required="true" />
 		
 		<cfset variables.xslBasePath = arguments.xslBasePath />
-		<cfset variables.adminPass = arguments.adminPass />
-		<cfset variables.adminAPIFacade = createObject("component","cfcgenerator.com.cf.model.adminAPI.adminAPIFacade").init(variables.adminPass) />
+		<cfset variables.adminPass = "" />
+		
 		<cfset variables.xsl = createObject("component","cfcgenerator.com.cf.model.xsl.xslService").init() />
 		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="setAdminPassword" access="public" returntype="boolean" output="false">
+		<cfargument name="adminPass" type="string" required="true" />
+		
+		<cfset var success = true />
+		
+		<cfset variables.adminPass = arguments.adminPass />
+		<cftry>
+			<cfset loadAdminApi() />
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
+		</cftry>
+		<cfreturn success />
+	</cffunction>
+	
+	<cffunction name="loadAdminApi" access="private" returntype="void" output="false">
+		<cfset variables.adminAPIFacade = createObject("component","cfcgenerator.com.cf.model.adminAPI.adminAPIFacade").init(variables.adminPass) />
 	</cffunction>
 
 	<cffunction name="getDSNs" access="public" returntype="array" output="false">

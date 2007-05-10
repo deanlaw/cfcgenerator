@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="vertical"
+	verticalGap="10"
+	horizontalAlign="center"
+	width="300"
+	height="280"
+	paddingTop="5"
+	title="Generator Details">
+	<mx:Style>
+		.valid{
+			color:#000000;
+		}
+		.invalid{
+			color:#FF0000;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.control.GetGeneratedCodeEvent;
+			import com.vo.tableVO;
+			import com.vo.datasourceVO;
+			import mx.events.ValidationResultEvent;
+			
+			[Bindable]
+  	 		public var tables: ArrayCollection;
+  	 		[Bindable]
+  	 		public var datasource: datasourceVO;
+  	 		[Bindable]
+  	 		public var templates: ArrayCollection;
+  	 		
+  	 		private function generatePages() :void {
+  	 		var table : tableVO = tableSelect.selectedItem as tableVO;
+  	 		var datasource : datasourceVO = datasource;
+  	 		var pathValidate:ValidationResultEvent = stringIsRequired.validate(pathTxt.text);
+			if (pathValidate.type == ValidationResultEvent.VALID){
+				pathTxt.errorString = ""; 
+				pathLabel.setStyle("styleName", "valid");
+				var template : String = templateSelect.selectedItem as String;
+				var stripBreaks : Boolean = stripLineBreaks.selected;
+				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(datasource,table,pathTxt.text,template,stripBreaks,rootpathTxt.text);
+  				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+  			}
+  			else {
+  				pathTxt.errorString = pathValidate.message; 
+				pathLabel.setStyle("styleName", "invalid");
+  			}
+		}
+		]]>
+	</mx:Script>
+	<mx:StringValidator id="stringIsRequired" minLength="1" />
+	<mx:VBox verticalGap="1">
+		<mx:Label text="Table:" />
+		<mx:ComboBox id="tableSelect" dataProvider="{tables}" labelField="tableName"></mx:ComboBox>
+		<mx:Label text="Template:" />
+		<mx:ComboBox id="templateSelect" dataProvider="{templates}" toolTip="Additional templates are defined in the /xsl/projects folder."></mx:ComboBox>
+		<mx:Label id="pathLabel" text="CFC Path:" />
+		<mx:TextInput id="pathTxt" toolTip="Dot notation path to your component under your site root." />
+		<mx:Label text="File System Root Path:" />
+		<mx:TextInput id="rootpathTxt" toolTip="Relative path to your web site root." />
+	</mx:VBox>
+	<mx:HBox verticalGap="0">
+		<mx:Label text="Strip extra line breaks?" />
+		<mx:CheckBox id="stripLineBreaks" toolTip="Some systems show extra line breaks in the generated output." />
+	</mx:HBox>
+	<mx:Button id="generatrBtn" label="Generate" click="generatePages()" />
+</mx:Panel>

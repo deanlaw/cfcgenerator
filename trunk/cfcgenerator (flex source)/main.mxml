@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:business="com.business.*" 
+	xmlns:control="com.control.*" 
+	xmlns:view="com.view.*"
+	xmlns:utils="utils.*"
+	pageTitle="Illudium PU-36 Code Generator"
+	layout="absolute"
+	creationComplete="initApp()">
+	
+	<mx:Script>
+	<![CDATA[
+		import com.view.AdminPassPanel;
+		import mx.controls.Alert;
+		import mx.core.Container;
+		import com.adobe.cairngorm.control.CairngormEventDispatcher;
+		import com.model.ModelLocator;
+		import com.control.GetDatasourcesEvent;
+		import com.control.GetTemplatesEvent;
+		import mx.managers.PopUpManager;
+						
+		[Bindable]
+		public var model : ModelLocator = ModelLocator.getInstance();
+		
+		private function initApp() :void {
+  			var templateevent : GetTemplatesEvent = new GetTemplatesEvent( );
+  			CairngormEventDispatcher.getInstance().dispatchEvent( templateevent );
+  			
+  			adminPassPopup();
+		}
+		
+		private function adminPassPopup():void {
+			var adminPassPanel:AdminPassPanel = new AdminPassPanel();
+  			mx.managers.PopUpManager.addPopUp(adminPassPanel,mainLayout,true);
+  			mx.managers.PopUpManager.centerPopUp(adminPassPanel);
+		}
+
+	]]>
+	</mx:Script>
+	
+	<business:Services id="generatorServices"/>
+	<control:GeneratorControl id="controller"/>
+	<utils:Observe source="{ model.reloadAdminPassPopup }" handler="{ adminPassPopup }"/>
+	<view:layoutCanvas id="mainLayout" datasources="{model.datasources}" tables="{model.tables}" datasource="{model.datasource}" templates="{model.templates}" />	
+</mx:Application>

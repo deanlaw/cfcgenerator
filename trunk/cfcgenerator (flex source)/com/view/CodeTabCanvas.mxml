@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas label="{thisPage}" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.FocusManager;
+			import mx.controls.Alert;
+			import mx.controls.TextArea;
+			import com.control.SaveFileEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			
+			[Bindable]
+			public var thisPage:String;
+			[Bindable]
+			public var thisContent:String;
+			[Bindable]
+			public var thisPath:String;
+			
+			private function selectAll():void {
+				displayCode.setFocus();
+				displayCode.selectionBeginIndex = 0;
+				displayCode.selectionEndIndex = displayCode.text.length;
+			}
+			private function saveFile():void {
+				var event : SaveFileEvent = new SaveFileEvent(thisContent,cfcRootPath.text);
+	  			CairngormEventDispatcher.getInstance().dispatchEvent( event );
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+		<mx:TextArea id="displayCode" width="530" height="95%" text="{thisContent}" wordWrap="false">
+		</mx:TextArea>
+		<mx:HBox width="95%" height="35" horizontalAlign="right" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="cfcRootPath" text="{thisPath}" width="350" toolTip="If the specified path doesn't exist, it will be created." />
+			<mx:Button label="Save to File" enabled="{thisPath.length > 0}" click="saveFile()" />
+			<mx:Button label="Select All" click="selectAll()" toolTip="Select all content in the text box for easy copy/paste." />
+		</mx:HBox>
+	</mx:VBox>
+</mx:Canvas>

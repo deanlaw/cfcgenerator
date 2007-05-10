@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="100" verticalAlign="middle" horizontalAlign="center" title="ColdFusion Settings">
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.control.SetAdminPassEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+		
+			function setAdminPass():void {
+				var event : SetAdminPassEvent = new SetAdminPassEvent(adminPassTxt.text);
+  				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+  				PopUpManager.removePopUp(this);
+  				CursorManager.setBusyCursor();
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox verticalAlign="middle" horizontalAlign="right">
+		<mx:HBox width="100%" horizontalAlign="center">
+			<mx:Label text="ColdFusion Administrator Password:" />
+			<mx:TextInput id="adminPassTxt" displayAsPassword="true" />
+		</mx:HBox>
+		<mx:Button id="adminPassSubmit" label="Submit" click="setAdminPass();" />
+	</mx:VBox>
+</mx:Panel>

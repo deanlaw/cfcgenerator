@@ -7,7 +7,7 @@
 		<include file="getset.xsl" />
 		<include file="dump.xsl" />
 	</bean>
-	<dao filetype="cfc">
+	<dao fileNameAppend="DAO" filetype="cfc">
 		<include file="create.xsl" />
 		<include file="read.xsl" />
 		<include file="update.xsl" />

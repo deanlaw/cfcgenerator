@@ -1,0 +1,22 @@
+<project name="Illudium Ant Build Definitons" default="deploy">
+	
+	<target name="deploy">
+		
+		<!-- increment build number -->
+		<buildnumber />
+		
+		<!-- execute folder sync, exclude any source control and special files -->
+		<sync todir="\Users\brian\Documents\cfcgenerator"
+			includeEmptyDirs="true" overwrite="true">
+			<fileset dir="\Users\brian\Documents\workspace\Code Generator\trunk\cfcgenerator\">
+				<exclude name="**/*.svn*"/>
+				<exclude name="**/*build*"/>
+				<exclude name="**/*.project*"/>
+			</fileset>
+		</sync>
+		<tstamp>
+			<format property="tstmp" pattern="yyyy-MM-dd" locale="en,US"/>
+		</tstamp>
+		<zip basedir="\Users\brian\Documents\workspace\Code Generator\trunk\cfcgenerator" destfile="\Users\brian\Documents\cfcgenerator_build_${build.number}_${tstmp}.zip" update="true" />
+	</target>
+</project>

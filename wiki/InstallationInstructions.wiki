@@ -12,5 +12,4 @@ How to install the project.
   NOTE: If you need to place it elsewhere, a mapping should work, 
   but you will need to edit your [webroot]\web-inf\flex\services-config.xml
   and set <use-mappings>true</use-mappings>
-  # Set your ColdFusion administrator password as the value of adminPass in Application.cfm
   # That's it!

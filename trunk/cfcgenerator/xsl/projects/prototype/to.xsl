@@ -11,7 +11,7 @@
 		<xsl:for-each select="root/bean/dbtable/column">
 		&lt;cfset this.<xsl:value-of select="@name" /> = arguments.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
 		
-		&lt;cfrreturn this /&gt;
+		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 &lt;/cfcomponent&gt;</xsl:template>
 </xsl:stylesheet>

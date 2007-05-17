@@ -75,8 +75,10 @@
 		<cfif arguments.projectPath eq "default">
 			<cfset arguments.projectPath = "" />
 		</cfif>
-		<cfif len(arguments.rootPath)>
+		<cfif len(arguments.rootPath) and directoryExists(arguments.rootPath)>
 			<cfset arguments.rootPath = arguments.rootPath & separator & replace(arguments.componentPath,".",separator,"all") />
+		<cfelse>
+			<cfset arguments.rootPath = "" />
 		</cfif>
 		<!--- configure the xsl component with the dsn --->
 		<cfset variables.xsl.configure(arguments.dsn,variables.xslBasePath,arguments.projectPath,arguments.rootPath) />

@@ -29,6 +29,7 @@ package com.commands {
 			}
 		
 		public function fault( rpcEvent : Object ) : void {
+			CursorManager.removeBusyCursor();
 			// store an error message in the model locator
 			// labels, alerts, etc can bind to this to notify the user of errors
 			mx.controls.Alert.show("Fault occured in GetTablesCommand.");

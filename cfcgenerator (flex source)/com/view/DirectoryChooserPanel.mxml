@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="500" height="300" title="Choose a Directory">
+	<mx:Style>
+		.haschildren{
+			font-weight: bold;
+		}
+		.nochildren{
+			font-weight: normal;
+		}
+	</mx:Style>
+	<mx:Script>
+	<![CDATA[
+		import com.vo.directoryVO;
+		import com.model.ModelLocator;
+		import mx.managers.PopUpManager;
+		import com.adobe.cairngorm.control.CairngormEventDispatcher;
+		import com.control.GetDirectoriesEvent;
+		import com.control.GetRootsEvent;
+		import mx.controls.Alert;
+		
+		[Bindable]
+		public var model : ModelLocator = ModelLocator.getInstance();
+		
+		private function setSelectedDir() : void {
+			model.selectedDirectory = directories.selectedItem as directoryVO;
+		}
+		
+		private function openChildren() : void {
+			model.selectedDirectory = directories.selectedItem as directoryVO;
+			if (model.selectedDirectory.hasChildren) {
+				var getDirectoriesEvent : GetDirectoriesEvent = new GetDirectoriesEvent(model.selectedDirectory);
+				CairngormEventDispatcher.getInstance().dispatchEvent( getDirectoriesEvent );
+			}
+		}
+		
+		private function closeWindow() : void {
+			PopUpManager.removePopUp(this);
+		}
+		private function upLevel() : void {
+			var directory : directoryVO = new directoryVO();
+			directory.path = model.selectedDirectory.parentPath;
+			if (directory.path == "") {
+				var getRootsEvent : GetRootsEvent = new GetRootsEvent();
+				CairngormEventDispatcher.getInstance().dispatchEvent( getRootsEvent );
+			}
+			else {
+				var getDirectoriesEvent : GetDirectoriesEvent = new GetDirectoriesEvent(directory);
+				CairngormEventDispatcher.getInstance().dispatchEvent( getDirectoriesEvent );
+			}
+		}
+	]]>
+	</mx:Script>
+	<mx:VBox width="100%" horizontalAlign="center">
+		<mx:TextInput id="currentDirectory" width="100%" text="{model.selectedDirectory.path}" />
+		<mx:DataGrid id="directories" width="100%" height="200" dataProvider="{model.directories}" click="setSelectedDir()" doubleClickEnabled="true" doubleClick="openChildren()">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Directory Name">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:Label text="{data.directoryName}" styleName="{chooseStyle(data)}">
+								<mx:Script>
+									<![CDATA[
+										private function chooseStyle(data:Object):String {
+											if (data.hasChildren) {
+												return "haschildren";
+											}
+											else {
+												return "nochildren";
+											}
+										}
+									]]>
+								</mx:Script>
+							</mx:Label>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox>
+			<mx:Button label="Up a Level" click="upLevel()" />
+			<mx:Button label="Select" click="closeWindow()" />
+		</mx:HBox>
+	</mx:VBox>
+</mx:Panel>

@@ -13,8 +13,8 @@
 		<cfset variables.basePath = expandPath(arguments.basePath) />
 		<cfset variables.dsn = arguments.dsn />
 		<cfset variables.projectPath = variables.basePath & 'projects' & separator & arguments.projectPath & separator />
-		<cfif len(arguments.rootPath)>
-			<cfset variables.rootPath = expandPath(arguments.rootPath) />
+		<cfif len(arguments.rootPath) and directoryExists(arguments.rootPath)>
+			<cfset variables.rootPath = arguments.rootPath />
 		<cfelse>
 			<cfset variables.rootPath = "" />
 		</cfif>

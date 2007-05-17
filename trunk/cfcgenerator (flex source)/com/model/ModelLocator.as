@@ -5,6 +5,7 @@ package com.model
 	import com.vo.datasourceVO;
 	import com.vo.tableVO;
 	import com.vo.generatedPageVO;
+	import com.vo.directoryVO;
 
  	[Bindable]
 	public class ModelLocator implements com.adobe.cairngorm.model.ModelLocator
@@ -27,6 +28,7 @@ package com.model
 		
 		public var reloadAdminPassPopup : String;
 		public var reloadCodeTabs : String;
+		public var openPopup : String;
 		public var datasources : ArrayCollection = new ArrayCollection();
 		public var tables : ArrayCollection = new ArrayCollection();
 		public var generatedPages : ArrayCollection = new ArrayCollection();
@@ -34,6 +36,8 @@ package com.model
 		public var datasource : datasourceVO;
 		public var table : tableVO;
 		public var generatedPage : generatedPageVO;
+		public var selectedDirectory : directoryVO;
+		public var directories : ArrayCollection = new ArrayCollection();
 		
 	}	
 }

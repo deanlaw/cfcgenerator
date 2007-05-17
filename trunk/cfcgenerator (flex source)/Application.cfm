@@ -4,5 +4,6 @@
 <cfif not application.inited or url.reload>
 	<cfset xslBasePath = "/cfcgenerator/xsl/" />
 	<cfset application.generatorService = createObject("component","cfcgenerator.com.cf.model.generatorService").init(xslBasePath) />
+	<cfset application.directoryService = createObject("component","cfcgenerator.com.cf.model.directory.directoryService").init() />
 	<cfset application.inited = true />
 </cfif>

@@ -24,6 +24,9 @@
 			import com.vo.tableVO;
 			import com.vo.datasourceVO;
 			import mx.events.ValidationResultEvent;
+			import mx.managers.PopUpManager;
+			import com.model.ModelLocator;
+			import mx.utils.UIDUtil;
 			
 			[Bindable]
   	 		public var tables: ArrayCollection;
@@ -31,6 +34,8 @@
   	 		public var datasource: datasourceVO;
   	 		[Bindable]
   	 		public var templates: ArrayCollection;
+  	 		[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
   	 		
   	 		private function generatePages() :void {
   	 		var table : tableVO = tableSelect.selectedItem as tableVO;
@@ -43,24 +48,30 @@
 				var stripBreaks : Boolean = stripLineBreaks.selected;
 				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(datasource,table,pathTxt.text,template,stripBreaks,rootpathTxt.text);
   				CairngormEventDispatcher.getInstance().dispatchEvent( event );
-  			}
+  				}
   			else {
   				pathTxt.errorString = pathValidate.message; 
 				pathLabel.setStyle("styleName", "invalid");
-  			}
-		}
+  				}
+			}
+			private function openDirectories() :void {
+				model.openPopup = UIDUtil.createUID();
+			}
 		]]>
 	</mx:Script>
 	<mx:StringValidator id="stringIsRequired" minLength="1" />
 	<mx:VBox verticalGap="1">
 		<mx:Label text="Table:" />
-		<mx:ComboBox id="tableSelect" dataProvider="{tables}" labelField="tableName"></mx:ComboBox>
+		<mx:ComboBox id="tableSelect" dataProvider="{tables}" labelField="tableName" width="200"></mx:ComboBox>
 		<mx:Label text="Template:" />
-		<mx:ComboBox id="templateSelect" dataProvider="{templates}" toolTip="Additional templates are defined in the /xsl/projects folder."></mx:ComboBox>
+		<mx:ComboBox id="templateSelect" dataProvider="{templates}" width="200" toolTip="Additional templates are defined in the /xsl/projects folder."></mx:ComboBox>
 		<mx:Label id="pathLabel" text="CFC Path:" />
-		<mx:TextInput id="pathTxt" toolTip="Dot notation path to your component under your site root." />
-		<mx:Label text="File System Root Path:" />
-		<mx:TextInput id="rootpathTxt" toolTip="Relative path to your web site root." />
+		<mx:TextInput id="pathTxt" width="200" toolTip="Dot notation path to your component under your site root." />
+		<mx:Label text="File System Save Path:" />
+		<mx:HBox>
+			<mx:TextInput id="rootpathTxt" text="{model.selectedDirectory.path}" toolTip="Absolute path to save." width="175" />
+			<mx:Button id="btnOpenDirectories" label="Browse" click="openDirectories()" />
+		</mx:HBox>
 	</mx:VBox>
 	<mx:HBox verticalGap="0">
 		<mx:Label text="Strip extra line breaks?" />

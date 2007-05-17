@@ -11,5 +11,12 @@
 		<mx:method name="getTables" />
 		<mx:method name="getGeneratedCFCs" />
 		<mx:method name="saveFile" />
-	</mx:RemoteObject>    
+	</mx:RemoteObject>
+	<mx:RemoteObject
+			id="directoryServices"
+			destination="ColdFusion"
+			source="cfcgenerator.com.cf.model.directory.directoryRemote">
+		<mx:method name="getRoots" />
+		<mx:method name="getDirectories" />
+	</mx:RemoteObject>
 </cairngorm:ServiceLocator>

@@ -7,7 +7,7 @@
 			import mx.managers.PopUpManager;
 			import mx.managers.CursorManager;
 		
-			function setAdminPass():void {
+			private function setAdminPass():void {
 				var event : SetAdminPassEvent = new SetAdminPassEvent(adminPassTxt.text);
   				CairngormEventDispatcher.getInstance().dispatchEvent( event );
   				PopUpManager.removePopUp(this);

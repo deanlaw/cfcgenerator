@@ -49,6 +49,9 @@
 			<cfreturn "mysql" />
 		<cfelseif ((arguments.datasource.driver contains "Oracle") or (arguments.datasource.class contains "Oracle"))>
 			<cfreturn "oracle" />
+		<!--- if you are running cf8 we can try to leverage db metadata tags --->
+		<cfelseif listFirst(server.coldfusion.ProductVersion) gte 8 and arguments.datasource.driver neq "MSAccess"><!--- only access with unicode seems to work with dbinfo --->
+			<cfreturn "scorpio" />
 		<cfelse> <!--- not a supported type --->
 			<cfreturn "" />
 		</cfif>

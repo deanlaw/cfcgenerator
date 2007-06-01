@@ -295,7 +295,7 @@
 		<cfquery name="qTable" datasource="#variables.dsn#">
 			SELECT COLUMN_NAME,
 			CASE
-				WHEN IS_NULLABLE = 'Yes' AND COLUMN_DEFAULT IS NULL THEN 'true' /* a column is defined as nullable only if it doesn't have a default */
+				WHEN IS_NULLABLE = 'Yes' AND COLUMN_DEFAULT IS NULL THEN 'true'
 				ELSE 'false'
 			END as nullable,
 			DATA_TYPE as type_name,

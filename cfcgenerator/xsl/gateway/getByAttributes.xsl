@@ -1,23 +1,15 @@
-	&lt;cffunction name="getByAttributes" access="public" output="false" returntype="query"&gt;
+	&lt;cffunction name="getByAttributes" access="public" output="false" returntype="array"&gt;
 		<xsl:for-each select="root/bean/dbtable/column">&lt;cfargument name="<xsl:value-of select="@name" />" type="<xsl:value-of select="@type" />" required="false" /&gt;
 		</xsl:for-each>&lt;cfargument name="orderby" type="string" required="false" /&gt;
 		
-		&lt;cfset var qList = "" /&gt;		
-		&lt;cfquery name="qList" datasource="#variables.dsn#"&gt;
-			SELECT
-				<xsl:for-each select="root/bean/dbtable/column"><xsl:value-of select="@name" /><xsl:if test="position() != last()">,
-				</xsl:if>
-				</xsl:for-each>
-			FROM	<xsl:value-of select="//dbtable/@name" />
-			WHERE	0=0
-		<xsl:for-each select="root/bean/dbtable/column">
-		&lt;cfif structKeyExists(arguments,"<xsl:value-of select="@name" />") and len(arguments.<xsl:value-of select="@name" />)&gt;
-			AND	<xsl:value-of select="@name" /> = &lt;cfqueryparam value="#arguments.<xsl:value-of select="@name" />#" CFSQLType="<xsl:value-of select="@cfSqlType" />" /&gt;
-		&lt;/cfif&gt;</xsl:for-each>
-		&lt;cfif structKeyExists(arguments, "orderby") and len(arguments.orderBy)&gt;
-			ORDER BY #arguments.orderby#
-		&lt;/cfif&gt;
-		&lt;/cfquery&gt;
-		
-		&lt;cfreturn qList /&gt;
+		&lt;cfset var qList = getByAttributesQuery(argumentCollection=arguments) /&gt;		
+		&lt;cfset var arrObjects = arrayNew(1) /&gt;
+		&lt;cfset var tmpObj = "" /&gt;
+		&lt;cfset var i = 0 /&gt;
+		&lt;cfloop from="1" to="#qList.recordCount#" index="i"&gt;
+			&lt;cfset tmpObj = createObject("component","<xsl:value-of select="//bean/@path"/>").init(argumentCollection=queryRowToStruct(qList,i)) /&gt;
+			&lt;cfset arrayAppend(arrObjects,tmpObj) /&gt;
+		&lt;/cfloop&gt;
+				
+		&lt;cfreturn arrObjects /&gt;
 	&lt;/cffunction&gt;

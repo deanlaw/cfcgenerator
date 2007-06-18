@@ -7,7 +7,7 @@
 		<include file="getset.xsl" />
 		<include file="dump.xsl" />
 	</bean>
-	<dao filetype="cfc">
+	<dao fileNameAppend="DAO" filetype="cfc">
 		<include file="create.xsl" />
 		<include file="read.xsl" />
 		<include file="update.xsl" />
@@ -17,11 +17,14 @@
 		<include file="queryRowToStruct.xsl" />
 	</dao>
 	<gateway filetype="cfc">
+		<include file="getByAttributesQuery.xsl" />
 		<include file="getByAttributes.xsl" />
+		<include file="queryRowToStruct.xsl" />
 	</gateway>
 	<service filetype="cfc">
+		<include file="createBean.xsl" />
 		<include file="getBean.xsl" />
-		<include file="getBeansQuery.xsl" />
+		<include file="getBeans.xsl" />
 		<include file="saveBean.xsl" />
 		<include file="deleteBean.xsl" />
 	</service>

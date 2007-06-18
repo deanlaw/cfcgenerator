@@ -12,7 +12,7 @@
 		<include file="saveBean.xsl" />
 		<include file="deleteBean.xsl" />
 	</service>
-	<decorator fileType="cfc">
+	<decorator fileType="cfc" fileNameAppend="">
 		<include file="validate.xsl" />
 	</decorator>
 	<transfer fileType="xml" />

@@ -5,8 +5,8 @@
 		<xsl:template match="/">
 &lt;cfcomponent displayname="<xsl:value-of select="//bean/@name"/>Gateway" output="false"&gt;
 	&lt;cffunction name="init" access="public" output="false" returntype="<xsl:value-of select="//bean/@path"/>Gateway"&gt;
-		&lt;cfargument name="dsn" type="string" required="true" /&gt;
-		&lt;cfset variables.dsn = arguments.dsn /&gt;
+		&lt;cfargument name="transfer" type="transfer.com.Transfer" required="true" /&gt;
+		&lt;cfset variables.transfer = arguments.transfer /&gt;
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 	

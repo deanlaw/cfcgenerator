@@ -2,14 +2,19 @@
 <!-- yet another config -->
 <generator>
 	<gateway fileType="cfc">
+		<include file="getByAttributesQuery.xsl" />
 		<include file="getByAttributes.xsl" />
 	</gateway>
 	<service fileType="cfc">
+		<include file="createBean.xsl" />
 		<include file="getBean.xsl" />
-		<include file="getBeansQuery.xsl" />
+		<include file="getBeans.xsl" />
 		<include file="saveBean.xsl" />
 		<include file="deleteBean.xsl" />
 	</service>
+	<decorator fileType="cfc">
+		<include file="validate.xsl" />
+	</decorator>
 	<transfer fileType="xml" />
 	<coldspring fileType="xml" />
 </generator>

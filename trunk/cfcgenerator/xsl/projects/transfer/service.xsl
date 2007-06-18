@@ -6,7 +6,7 @@
 &lt;cfcomponent name="<xsl:value-of select="//bean/@name"/>Service" output="false"&gt;
 
 	&lt;cffunction name="init" access="public" output="false" returntype="<xsl:value-of select="//bean/@path"/>Service"&gt;
-		&lt;cfargument name="transfer" type="transfer.transferFactory" required="true" /&gt;
+		&lt;cfargument name="transfer" type="transfer.com.Transfer" required="true" /&gt;
 		&lt;cfargument name="<xsl:value-of select="//bean/@name"/>Gateway" type="<xsl:value-of select="//bean/@path"/>Gateway" required="true" /&gt;
 
 		&lt;cfset variables.transfer = arguments.transfer /&gt;

@@ -11,10 +11,14 @@ package <xsl:value-of select="//bean/@path"/>
 	public class <xsl:value-of select="//bean/@name"/>VO
 	{
 
-		<xsl:for-each select="root/bean/dbtable/column">public var <xsl:value-of select="@name"/>:<xsl:choose><xsl:when test="@type='numeric'">Number</xsl:when><xsl:when test="@type='date'">Date</xsl:when><xsl:when test="@type='boolean'">Boolean</xsl:when><xsl:otherwise>String</xsl:otherwise></xsl:choose> = <xsl:choose><xsl:when test="@type='String'">""</xsl:when><xsl:otherwise>Null</xsl:otherwise></xsl:choose>;
+		<xsl:for-each select="root/bean/dbtable/column">public var <xsl:value-of select="@name"/>:<xsl:choose><xsl:when test="@type='numeric'">Number</xsl:when><xsl:when test="@type='date'">Date</xsl:when><xsl:when test="@type='boolean'">Boolean</xsl:when><xsl:otherwise>String</xsl:otherwise></xsl:choose> = <xsl:choose><xsl:when test="@type='string'">""</xsl:when><xsl:otherwise>null</xsl:otherwise></xsl:choose>;
 		</xsl:for-each>
-		public function <xsl:value-of select="//bean/@name"/>VO()
+		public function <xsl:value-of select="//bean/@name"/>VO(data:Object = null)
 		{
+			if (data != null) {
+					<xsl:for-each select="root/bean/dbtable/column">this.<xsl:value-of select="@name"/> = data.<xsl:value-of select="@name"/>;
+					</xsl:for-each>
+			}
 		}
 
 	}

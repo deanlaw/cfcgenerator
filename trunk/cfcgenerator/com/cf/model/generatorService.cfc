@@ -2,10 +2,10 @@
 	<cffunction name="init" access="public" returntype="generatorService" output="false">
 		<cfargument name="xslBasePath" type="string" required="true" />
 		
-		<cfset variables.xslBasePath = arguments.xslBasePath />
+		<cfset variables.templateBasePath = arguments.xslBasePath />
 		<cfset variables.adminPass = "" />
 		
-		<cfset variables.xsl = createObject("component","cfcgenerator.com.cf.model.xsl.xslService").init() />
+		<cfset variables.code = createObject("component","cfcgenerator.com.cf.model.code.codeService").init() />
 		<cfreturn this />
 	</cffunction>
 	
@@ -49,7 +49,7 @@
 		<cfset var qryTemplateFolders = "" />
 		<cfset var arrTemplateFolders = arrayNew(1) />
 		<cfset arrayAppend(arrTemplateFolders,"default") />
-		<cfdirectory name="qryTemplateFolders" action="list" directory="#expandPath(variables.xslBasePath&'projects')#" />
+		<cfdirectory name="qryTemplateFolders" action="list" directory="#expandPath(variables.templateBasePath&'projects')#" />
 		<cfloop query="qryTemplateFolders">
 			<!--- only directories and not the .svn dir if it exists --->
 			<cfif qryTemplateFolders.type eq "Dir" and qryTemplateFolders.name neq ".svn">
@@ -80,12 +80,12 @@
 		<cfelse>
 			<cfset arguments.rootPath = "" />
 		</cfif>
-		<!--- configure the xsl component with the dsn --->
-		<cfset variables.xsl.configure(arguments.dsn,variables.xslBasePath,arguments.projectPath,arguments.rootPath) />
+		<!--- configure the code template component with the dsn --->
+		<cfset variables.code.configure(arguments.dsn,variables.templateBasePath,arguments.projectPath,arguments.rootPath) />
 		<cfset variables.adminAPIFacade.getDatasource(arguments.dsn).getDbms().setComponentPath(arguments.componentPath) />
 		<cfset variables.adminAPIFacade.getDatasource(arguments.dsn).getDbms().setTable(arguments.table)>
 		<!--- get an array containing the generated code --->
-		<cfset code = variables.xsl.getComponents(variables.adminAPIFacade.getDatasource(arguments.dsn).getDbms().getTableXML()) />
+		<cfset code = variables.code.getComponents(variables.adminAPIFacade.getDatasource(arguments.dsn).getDbms().getTableXML()) />
 		<!--- try to remove extraneous line breaks and spaces that seem to appear in flex in some cases but not in CF --->
 		<cfif arguments.stripLineBreaks>
 			<cfloop from="1" to="#arrayLen(code)#" index="i">

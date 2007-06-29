@@ -24,7 +24,7 @@
 	<cffunction name="getComponents" access="public" output="false" returntype="array">
 		<cfargument name="xmlTable" required="true" type="xml" />
 		
-		<cfset var cfcIndex = 0 />
+		<cfset var i = 0 />
 		<cfset var separator = getOSFileSeparator() />
 		<cfset var template = "" />
 		<cfset var name = "" />
@@ -33,36 +33,46 @@
 		<cfset var thisRootPath = "" />
 		<cfset var objPage = "" />
 		<cfset var arrComponents = arrayNew(1) />
-		<cfset var root = arguments.xmlTable.root />
 		
 		<!--- loop through cfc types --->
-		<cfloop from="1" to="#arrayLen(variables.config.generator.xmlChildren)#" index="cfcIndex">
-			<cfset template = buildTemplate(variables.config.generator.xmlChildren[cfcIndex]) />
-			<cfset name = variables.config.generator.xmlChildren[cfcIndex].xmlName />
-			<cfif structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.templateType eq "cfm">
-				<!--- write the cfmm to a hard file so it can be dynamically evaluated --->
-				<cffile action="write" file="#expandPath('/tmp.txt')#" output="#template#" />
-				<cfsavecontent variable="content">
-					<cfinclude template="/tmp.txt" />
-				</cfsavecontent>
-				<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
-				<cffile action="delete" file="#expandPath('/tmp.txt')#" />
+		<cfloop from="1" to="#arrayLen(variables.config.generator.xmlChildren)#" index="i">
+			<cfset template = buildTemplate(variables.config.generator.xmlChildren[i]) />
+			<cfset name = variables.config.generator.xmlChildren[i].xmlName />
+			<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[i].xmlAttributes.templateType eq "cfm">
+				<cfset content = processCFMTemplate(template,arguments.xmlTable) />
 			<cfelse>
 				<cfset content = xmlTransform(arguments.xmlTable,template) />
 			</cfif>
 			<cfset thisRootPath = "" />
-			<cfif len(variables.rootPath) and structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"fileType")>
+			<cfif len(variables.rootPath) and structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileType")>
 				<!--- if text to append to file name is specified use it otherwise default to the object type name --->
-				<cfif structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"fileNameAppend")>
-					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileType  />
+				<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileNameAppend")>
+					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[i].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
 				<cfelse>
-					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileType  />
+					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
 				</cfif>
 			</cfif>
 			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.code.generatedPage").init(name,template,content,thisRootPath) />
 			<cfset arrayAppend(arrComponents,objPage) />
 		</cfloop>
 		<cfreturn arrComponents />
+	</cffunction>
+	
+	<cffunction name="processCFMTemplate" access="private" output="false" returntype="string">
+		<cfargument name="template" type="string" required="true" />
+		<cfargument name="xmlTable" required="true" type="xml" />
+		
+		<cfset var content = "" />
+		<cfset var root = arguments.xmlTable.root />
+		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
+		<cffile action="write" file="#expandPath('/tmp.txt')#" output="#arguments.template#" />
+		<cfsavecontent variable="content">
+			<cfinclude template="/tmp.txt" />
+		</cfsavecontent>
+		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
+		<cffile action="delete" file="#expandPath('/tmp.txt')#" />
+		
+		<cfreturn content />
 	</cffunction>
 	
 	<cffunction name="readConfig" access="private" output="false" returntype="void">		

@@ -24,7 +24,7 @@
 	<cffunction name="getComponents" access="public" output="false" returntype="array">
 		<cfargument name="xmlTable" required="true" type="xml" />
 		
-		<cfset var i = 0 />
+		<cfset var cfcIndex = 0 />
 		<cfset var separator = getOSFileSeparator() />
 		<cfset var template = "" />
 		<cfset var name = "" />
@@ -36,10 +36,10 @@
 		<cfset var root = arguments.xmlTable.root />
 		
 		<!--- loop through cfc types --->
-		<cfloop from="1" to="#arrayLen(variables.config.generator.xmlChildren)#" index="i">
-			<cfset template = buildTemplate(variables.config.generator.xmlChildren[i]) />
-			<cfset name = variables.config.generator.xmlChildren[i].xmlName />
-			<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[i].xmlAttributes.templateType eq "cfm">
+		<cfloop from="1" to="#arrayLen(variables.config.generator.xmlChildren)#" index="cfcIndex">
+			<cfset template = buildTemplate(variables.config.generator.xmlChildren[cfcIndex]) />
+			<cfset name = variables.config.generator.xmlChildren[cfcIndex].xmlName />
+			<cfif structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.templateType eq "cfm">
 				<!--- write the cfmm to a hard file so it can be dynamically evaluated --->
 				<cffile action="write" file="#expandPath('/tmp.txt')#" output="#template#" />
 				<cfsavecontent variable="content">
@@ -51,12 +51,12 @@
 				<cfset content = xmlTransform(arguments.xmlTable,template) />
 			</cfif>
 			<cfset thisRootPath = "" />
-			<cfif len(rootPath) and structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileType")>
+			<cfif len(variables.rootPath) and structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"fileType")>
 				<!--- if text to append to file name is specified use it otherwise default to the object type name --->
-				<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileNameAppend")>
-					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[i].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+				<cfif structKeyExists(variables.config.generator.xmlChildren[cfcIndex].xmlAttributes,"fileNameAppend")>
+					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileType  />
 				<cfelse>
-					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[cfcIndex].xmlAttributes.fileType  />
 				</cfif>
 			</cfif>
 			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.code.generatedPage").init(name,template,content,thisRootPath) />

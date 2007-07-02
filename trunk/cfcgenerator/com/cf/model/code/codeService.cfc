@@ -25,7 +25,6 @@
 		<cfargument name="xmlTable" required="true" type="xml" />
 		
 		<cfset var i = 0 />
-		<cfset var separator = getOSFileSeparator() />
 		<cfset var template = "" />
 		<cfset var name = "" />
 		<cfset var filename = "" />
@@ -65,12 +64,12 @@
 		<cfset var content = "" />
 		<cfset var root = arguments.xmlTable.root />
 		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
-		<cffile action="write" file="#expandPath('/tmp.txt')#" output="#arguments.template#" />
+		<cffile action="write" file="#expandPath('../../../temp/tmp.txt')#" output="#arguments.template#" />
 		<cfsavecontent variable="content">
-			<cfinclude template="/tmp.txt" />
+			<cfinclude template="../../../../temp/tmp.txt" />
 		</cfsavecontent>
 		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
-		<cffile action="delete" file="#expandPath('/tmp.txt')#" />
+		<cffile action="delete" file="#expandPath('../../../temp/tmp.txt')#" />
 		
 		<cfreturn content />
 	</cffunction>

@@ -38,7 +38,7 @@
 			<cfset template = buildTemplate(variables.config.generator.xmlChildren[i]) />
 			<cfset name = variables.config.generator.xmlChildren[i].xmlName />
 			<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[i].xmlAttributes.templateType eq "cfm">
-				<cfset content = processCFMTemplate(template,arguments.xmlTable) />
+				<cfset content = processCFMTemplate(template,arguments.xmlTable,i) />
 			<cfelse>
 				<cfset content = xmlTransform(arguments.xmlTable,template) />
 			</cfif>
@@ -54,22 +54,24 @@
 			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.code.generatedPage").init(name,template,content,thisRootPath) />
 			<cfset arrayAppend(arrComponents,objPage) />
 		</cfloop>
+		
 		<cfreturn arrComponents />
 	</cffunction>
 	
 	<cffunction name="processCFMTemplate" access="private" output="false" returntype="string">
 		<cfargument name="template" type="string" required="true" />
 		<cfargument name="xmlTable" required="true" type="xml" />
+		<cfargument name="append" required="true" type="numeric" />
 		
 		<cfset var content = "" />
 		<cfset var root = arguments.xmlTable.root />
 		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
-		<cffile action="write" file="#expandPath('../../../temp/tmp.txt')#" output="#arguments.template#" />
+		<cffile action="write" file="#expandPath('../../../temp/tmp#arguments.append#.cfm')#" output="#arguments.template#" />
 		<cfsavecontent variable="content">
-			<cfinclude template="../../../../temp/tmp.txt" />
+			<cfinclude template="../../../../temp/tmp#arguments.append#.cfm" />
 		</cfsavecontent>
 		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
-		<cffile action="delete" file="#expandPath('../../../temp/tmp.txt')#" />
+		<cffile action="delete" file="#expandPath('../../../temp/tmp#arguments.append#.cfm')#" />
 		
 		<cfreturn content />
 	</cffunction>

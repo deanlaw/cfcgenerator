@@ -64,19 +64,19 @@
 		
 		<cfset var content = "" />
 		<cfset var root = arguments.xmlTable.root />
-		<cfset var tempFileName = createUUID() />
+		<cfset var tempFilePath = '../../../temp/#createUUID()#.cfm' />
 		
-		<cfif not directoryExists(expandPath('temp'))>
-			<cfdirectory action="create" directory="#expandPath('temp')#">
+		<cfif not directoryExists(expandPath('../../../temp/'))>
+			<cfdirectory action="create" directory="#expandPath('../../../temp')#">
 		</cfif>
 		
 		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
-		<cffile action="write" file="#expandPath('temp/#tempFileName#.cfm')#" output="#arguments.template#" />
+		<cffile action="write" file="#expandPath(tempFilePath)#" output="#arguments.template#" />
 		<cfsavecontent variable="content">
-			<cfinclude template="../temp/#tempFileName#.cfm" />
+			<cfinclude template="../#tempFilePath#" />
 		</cfsavecontent>
 		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
-		<cffile action="delete" file="#expandPath('temp/#tempFileName#.cfm')#" />
+		<cffile action="delete" file="#expandPath(tempFilePath)#" />
 		
 		<cfreturn content />
 	</cffunction>

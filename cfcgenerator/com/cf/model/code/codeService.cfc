@@ -73,7 +73,12 @@
 		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
 		<cffile action="write" file="#expandPath(tempFilePath)#" output="#arguments.template#" />
 		<cfsavecontent variable="content">
-			<cfinclude template="../#tempFilePath#" />
+			<!--- workaround - looks like there is a bug in 7.0.2 multi-server (may be mac only) --->
+			<cfif getBaseTemplatePath() eq getCurrentTemplatePath()>
+				<cfinclude template="../com/#tempFilePath#" />
+			<cfelse>
+				<cfinclude template="../#tempFilePath#" />
+			</cfif>
 		</cfsavecontent>
 		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
 		<cffile action="delete" file="#expandPath(tempFilePath)#" />

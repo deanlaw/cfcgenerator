@@ -48,7 +48,13 @@
 		}
 	]]>
 	</mx:Script>
-	
+	<mx:Style>
+Application {
+   background-color: #999966;
+   color: #333300;
+   theme-color: #999966;
+   }
+	</mx:Style>
 	<business:Services id="generatorServices"/>
 	<control:GeneratorControl id="controller"/>
 	<utils:Observe source="{ model.reloadAdminPassPopup }" handler="{ adminPassPopup }"/>

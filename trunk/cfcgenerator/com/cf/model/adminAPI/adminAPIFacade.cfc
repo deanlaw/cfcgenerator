@@ -20,7 +20,7 @@
 			<cfset thisDSN = sortedDSNs[i] />
 			<cfset thisType = driverOrClassToType(dsns[thisDSN]) />
 			<cfif len(thisType)>
-				<cfset objDatasource = createObject("component","cfcgenerator.com.cf.model.datasource.datasource").init(dsns[thisDSN].name,thisType) />
+				<cfset objDatasource = createObject("component","cfcgenerator.com.cf.model.datasource.datasource").init(dsns[thisDSN].name,thisType,dsns[thisDSN].driver) />
 				<cfset arrayAppend(variables.arrDSNs,objDatasource) />
 			</cfif>
 		</cfloop>
@@ -49,10 +49,14 @@
 			<cfreturn "mysql" />
 		<cfelseif ((arguments.datasource.driver contains "Oracle") or (arguments.datasource.class contains "Oracle"))>
 			<cfreturn "oracle" />
+		<cfelseif ((arguments.datasource.driver contains "Informix") or (arguments.datasource.class contains "Informix"))>
+			<cfreturn "informix" />
+		<cfelseif ((arguments.datasource.driver contains "Postgres") or (arguments.datasource.class contains "postgresql"))>
+			<cfreturn "postgresql" />
 		<!--- if you are running cf8 we can try to leverage db metadata tags --->
 		<cfelseif listFirst(server.coldfusion.ProductVersion) gte 8 and arguments.datasource.driver neq "MSAccess"><!--- only access with unicode seems to work with dbinfo --->
 			<cfreturn "scorpio" />
-		<cfelse> <!--- not a supported type --->
+		<cfelse><!--- not a supported type --->
 			<cfreturn "" />
 		</cfif>
 	</cffunction>

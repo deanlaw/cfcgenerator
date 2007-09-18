@@ -1,6 +1,6 @@
-<cfcomponent name="mssql">
+<cfcomponent name="informix">
 	
-	<cffunction name="init" access="public" output="false" returntype="mssql">
+	<cffunction name="init" access="public" output="false" returntype="informix">
 		<cfargument name="dsn" type="string" required="true" />
 		
 		<cfset setDSN(arguments.dsn) />
@@ -15,11 +15,20 @@
 		<cfif not len(variables.dsn)>
 			<cfthrow message="you must provide a dsn" />
 		</cfif>
+		
 		<cfquery name="qAllTables" datasource="#variables.dsn#">
-			exec sp_tables @table_type="'Table'"
+			SELECT 
+			tabname
+			, owner
+			, tabtype
+			FROM systables
+			WHERE tabid > 99
+			AND tabtype IN ('T','V')
+			ORDER BY 1
 		</cfquery>
+		
 		<cfloop query="qAllTables">
-			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.table_name,qAllTables.table_type) />
+			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.tabname,qAllTables.tabtype) />
 			<cfset arrayAppend(arrReturn,objTable) />
 		</cfloop>
 		<cfreturn arrReturn />
@@ -46,77 +55,48 @@
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
 		
 		<cfswitch expression="#arguments.typeName#">
-			<cfcase value="bigint">
-				<cfreturn "cf_sql_bigint" />
-			</cfcase>
-			<cfcase value="binary">
-				<cfreturn "cf_sql_binary" />
-			</cfcase>
-			<cfcase value="bit">
-				<cfreturn "cf_sql_bit" />
-			</cfcase>
-			<cfcase value="char">
+			<cfcase value="0">
 				<cfreturn "cf_sql_char" />
 			</cfcase>
-			<cfcase value="datetime">
-				<cfreturn "cf_sql_timestamp" />
-			</cfcase>
-			<cfcase value="decimal">
-				<cfreturn "cf_sql_decimal" />
-			</cfcase>
-			<cfcase value="float">
-				<cfreturn "cf_sql_float" />
-			</cfcase>
-			<cfcase value="image">
-				<cfreturn "cf_sql_longvarbinary" />
-			</cfcase>
-			<cfcase value="int">
-				<cfreturn "cf_sql_integer" />
-			</cfcase>
-			<cfcase value="money">
-				<cfreturn "cf_sql_money" />
-			</cfcase>
-			<cfcase value="nchar">
-				<cfreturn "cf_sql_char" />
-			</cfcase>
-			<cfcase value="ntext">
-				<cfreturn "cf_sql_longvarchar" />
-			</cfcase>
-			<cfcase value="numeric">
-				<cfreturn "cf_sql_varchar" />
-			</cfcase>
-			<cfcase value="nvarchar">
-				<cfreturn "cf_sql_varchar" />
-			</cfcase>
-			<cfcase value="real">
-				<cfreturn "cf_sql_real" />
-			</cfcase>
-			<cfcase value="smalldatetime">
-				<cfreturn "cf_sql_date" />
-			</cfcase>
-			<cfcase value="smallint">
+			<cfcase value="1">
 				<cfreturn "cf_sql_smallint" />
 			</cfcase>
-			<cfcase value="smallmoney">
+			<cfcase value="2">
+				<cfreturn "cf_sql_integer" />
+			</cfcase>
+			<cfcase value="3">
+				<cfreturn "cf_sql_float" />
+			</cfcase>
+			<cfcase value="4">
+				<!--- SMALL FLOAT --->
+				<cfreturn "cf_sql_float" />
+			</cfcase>
+			<cfcase value="5">
 				<cfreturn "cf_sql_decimal" />
 			</cfcase>
-			<cfcase value="text">
-				<cfreturn "cf_sql_longvarchar" />
+			<cfcase value="6">
+				<cfreturn "cf_sql_integer" />
 			</cfcase>
-			<cfcase value="timestamp">
+			<cfcase value="7">
+				<cfreturn "cf_sql_date" />
+			</cfcase>
+			<cfcase value="8">
+				<cfreturn "cf_sql_money" />
+			</cfcase>
+			<cfcase value="10">
 				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
-			<cfcase value="tinyint">
-				<cfreturn "cf_sql_tinyint" />
-			</cfcase>
-			<cfcase value="uniqueidentifier">
-				<cfreturn "cf_sql_idstamp" />
-			</cfcase>
-			<cfcase value="varbinary">
-				<cfreturn "cf_sql_varbinary" />
-			</cfcase>
-			<cfcase value="varchar">
+			<cfcase value="13">
 				<cfreturn "cf_sql_varchar" />
+			</cfcase>
+			<cfcase value="40">
+				<cfreturn "cf_sql_longvarchar" />
+			</cfcase>
+			<cfcase value="41">
+				<cfreturn "cf_sql_longvarchar" />
+			</cfcase>
+			<cfcase value="262">
+				<cfreturn "cf_sql_serial" />
 			</cfcase>
 		</cfswitch>
 	</cffunction>
@@ -125,79 +105,50 @@
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
 		
 		<cfswitch expression="#arguments.typeName#">
-			<cfcase value="bigint">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="binary">
-				<cfreturn "binary" />
-			</cfcase>
-			<cfcase value="bit">
-				<cfreturn "boolean" />
-			</cfcase>
-			<cfcase value="char">
+			<cfcase value="0">
 				<cfreturn "string" />
 			</cfcase>
-			<cfcase value="datetime">
+			<cfcase value="1">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="2">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="3">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="4">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="5">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="6">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="7">
 				<cfreturn "date" />
 			</cfcase>
-			<cfcase value="decimal">
+			<cfcase value="8">
 				<cfreturn "numeric" />
 			</cfcase>
-			<cfcase value="float">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="image">
-				<cfreturn "binary" />
-			</cfcase>
-			<cfcase value="int">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="money">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="nchar">
-				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="ntext">
-				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="numeric">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="nvarchar">
-				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="real">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="smalldatetime">
+			<cfcase value="10">
 				<cfreturn "date" />
 			</cfcase>
-			<cfcase value="smallint">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="smallmoney">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="text">
+			<cfcase value="13">
 				<cfreturn "string" />
 			</cfcase>
-			<cfcase value="timestamp">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="tinyint">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="uniqueidentifier">
+			<cfcase value="40">
 				<cfreturn "string" />
 			</cfcase>
-			<cfcase value="varbinary">
-				<cfreturn "binary" />
+			<cfcase value="41">
+				<cfreturn "string" />
 			</cfcase>
-			<cfcase value="varchar">
+			<cfcase value="262">
 				<cfreturn "string" />
 			</cfcase>
 		</cfswitch>
+		
 	</cffunction>
 	
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
@@ -205,25 +156,44 @@
 		<!--- get table column info --->
 		<!--- This is a modified version of the query in sp_columns --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
-			SELECT	c.COLUMN_NAME,
-				c.DATA_TYPE as TYPE_NAME,
-				CASE
-					WHEN ISNUMERIC(c.CHARACTER_MAXIMUM_LENGTH) = 1 THEN c.CHARACTER_MAXIMUM_LENGTH
-					ELSE 0
-					END as LENGTH,
-				CASE
-					WHEN c.IS_NULLABLE = 'No' AND c.Column_Default IS NULL THEN 0 /* a column is defined as nullable only if it doesn't have a default */
-					ELSE 1
-				END as NULLABLE,
-				CASE
-					WHEN columnProperty(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
-					ELSE 'false'
-				END AS [IDENTITY]
-			FROM INFORMATION_SCHEMA.COLUMNS as c
-			WHERE c.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.table#" />
+			SELECT
+			c.colname AS COLUMN_NAME
+			, CASE
+				WHEN c.coltype = 262
+				THEN c.coltype
+				WHEN c.coltype >= 256
+				THEN (c.coltype-256)
+				ELSE c.coltype
+				END 
+				AS TYPE_NAME
+			, c.collength AS LENGTH
+			, CASE
+				WHEN c.coltype >= 256  
+				THEN 0
+				ELSE 1
+				END 
+				AS NULLABLE
+			, CASE
+				WHEN c.coltype = 262  
+				THEN 1
+				ELSE 0
+				END 
+				AS IDENTITY
+			FROM syscolumns c
+			WHERE c.tabid = (	SELECT t.tabid
+								FROM systables t
+								WHERE t.tabid > 99
+								AND t.tabname = <cfqueryparam
+													cfsqltype="cf_sql_char"
+													null="#YesNoFormat(Len(variables.table) EQ 0)#"
+													value="#variables.table#">
+							)
+			ORDER BY c.colno, c.colname
 		</cfquery>
+		
 		<cfset variables.tableMetadata = qTable />
 	</cffunction>
+	
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>
@@ -231,17 +201,46 @@
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />
-		<cfquery name="qPrimaryKeys" datasource="#variables.dsn#">
-			SELECT ccu.COLUMN_NAME,ccu.CONSTRAINT_NAME AS PK_NAME
-			FROM INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu
-				INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-				ON ccu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
-			AND 	ccu.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.table#" />
-			AND	tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+		<cfset var i = 0>
+		<cfset var qTableId = "">
+		<cfset var tableID = 0>
+		
+		<cfquery name="qTableId" datasource="#variables.dsn#">
+			SELECT t.tabid
+			FROM systables t
+			WHERE t.tabid > 99
+			AND t.tabname = <cfqueryparam
+								cfsqltype="cf_sql_char"
+								null="#YesNoFormat(Len(variables.table) EQ 0)#"
+								value="#variables.table#">
 		</cfquery>
+		
+		<cfset tableID = Trim(qTableId.tabid)>
+		
+		<cfquery name="qPrimaryKeys" datasource="#variables.dsn#">
+		  	<cfloop from="1" to="16" index="i" step="1">
+				<cfif i GT 1>UNION</cfif>
+		  		SELECT 
+		  		i.idxname AS PK_NAME
+		  		, i.idxtype
+		  		<cfif i eq 1>
+					, i.part#i# AS index_order
+		  		<cfelse>
+					, i.part#i#
+		  		</cfif>
+		  		, c.colname AS COLUMN_NAME
+		  		FROM sysindexes i
+		  		INNER JOIN syscolumns c ON (i.tabid = c.tabid AND c.colno = i.part#i#)
+		  		WHERE i.tabid = <cfqueryparam cfsqltype="cf_sql_char" value="#tableID#">
+				AND i.idxtype = <cfqueryparam cfsqltype="cf_sql_char" value="U">
+				AND i.part#i# != <cfqueryparam cfsqltype="cf_sql_char" value="0">
+	  		</cfloop>
+		</cfquery>
+
 		<cfset lstPrimaryKeys = valueList(qPrimaryKeys.column_name) />
 		<cfset variables.primaryKeyList = lstPrimaryKeys />
 	</cffunction>
+	
 	<cffunction name="getPrimaryKeyList" access="public" output="false" returntype="string">
 		<cfreturn variables.primaryKeyList />
 	</cffunction>

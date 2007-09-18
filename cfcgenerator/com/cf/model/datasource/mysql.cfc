@@ -129,7 +129,7 @@
 				<cfreturn "cf_sql_char" />
 			</cfcase>
 			<cfcase value="datetime">
-				<cfreturn "cf_sql_date" />
+				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
 			<cfcase value="decimal">
 				<cfreturn "cf_sql_decimal" />

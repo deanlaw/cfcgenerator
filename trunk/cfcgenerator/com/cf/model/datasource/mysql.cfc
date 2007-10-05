@@ -162,7 +162,7 @@
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 			<cfcase value="longtext">
-				<cfreturn "cf_sql_text" />
+				<cfreturn "cf_sql_longvarchar" />
 			</cfcase>
 			<cfcase value="real">
 				<cfreturn "cf_sql_real" />

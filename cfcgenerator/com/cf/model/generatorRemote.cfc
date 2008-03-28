@@ -10,7 +10,7 @@
 		<cfset variables.xsl = createObject("component","cfcgenerator.com.cf.model.xsl.xslService").init() />
 	</cffunction> --->
 	
-	<cffunction name="setAdminPassword" access="public" returntype="boolean" output="false">
+	<cffunction name="setAdminPassword" access="remote" returntype="boolean" output="false">
 		<cfargument name="adminPass" type="string" required="true" />
 		
 		<cfreturn application.generatorService.setAdminPassword(arguments.adminPass) />

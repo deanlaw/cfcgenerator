@@ -1,4 +1,4 @@
-<cfset directoryService = createObject("component","cfcgenerator.com.cf.model.directory.directoryService").init() />
+<cfset directoryService = createObject("component","cfcgenerator.com.cf.directory.directoryService").init() />
 
 <cfif structKeyExists(url,"viewDir")>
 	<cfset directories = directoryService.getDirectories(url.viewDir) />

@@ -3,7 +3,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getRoots" access="public" output="false" returntype="array">
+	<cffunction name="getRoots" access="public" output="false" returntype="cfcgenerator.com.cf.directory.directory[]">
 		<cfset var fileObj = createObject("java","java.io.File") />
 		<cfset var systemRoots = fileObj.listRoots() />
 		<cfset var i = 0 />
@@ -11,14 +11,14 @@
 		<cfset var thisDirectory = "" />
 		
 		<cfloop from="1" to="#arrayLen(systemRoots)#" index="i">
-			<cfset thisDirectory = createObject("component","cfcgenerator.com.cf.model.directory.directory").init(systemRoots[i].getAbsolutePath(),systemRoots[i].getAbsolutePath(),"",true) />
+			<cfset thisDirectory = createObject("component","cfcgenerator.com.cf.directory.directory").init(systemRoots[i].getAbsolutePath(),systemRoots[i].getAbsolutePath(),"",true) />
 			<cfset arrayAppend(arrReturn,thisDirectory) />
 		</cfloop>
 		
 		<cfreturn arrReturn />
 	</cffunction>
 	
-	<cffunction name="getDirectories" access="public" output="false" returntype="array">
+	<cffunction name="getDirectories" access="public" output="false" returntype="cfcgenerator.com.cf.directory.directory[]">
 		<cfargument name="baseDirectory" type="string" required="true" />
 		
 		<cfset var fileObj = createObject("java","java.io.File").Init(arguments.baseDirectory) />
@@ -56,7 +56,7 @@
 				<cfif not isDefined("thisParent")>
 					<cfset thisParent = "" />
 				</cfif>
-				<cfset thisDirectory = createObject("component","cfcgenerator.com.cf.model.directory.directory").init(allFiles[i].getName(),allFiles[i].getAbsolutePath(),thisParent,thisHasChildren) />
+				<cfset thisDirectory = createObject("component","cfcgenerator.com.cf.directory.directory").init(allFiles[i].getName(),allFiles[i].getAbsolutePath(),thisParent,thisHasChildren) />
 				<cfset arrayAppend(arrReturn,thisDirectory) />
 			</cfif>
 		</cfloop>

@@ -56,7 +56,7 @@
 		<cfreturn xmlTable />
 	</cffunction>
 	
-	<cffunction name="getComponents" access="public" output="false" returntype="array">
+	<cffunction name="getComponents" access="public" output="false" returntype="cfcgenerator.com.cf.code.generatedPage[]">
 		<cfargument name="table" required="true" type="cfcgenerator.com.cf.datasource.table.table" />
 		
 		<cfset var i = 0 />

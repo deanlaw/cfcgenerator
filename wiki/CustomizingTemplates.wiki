@@ -1,4 +1,5 @@
 #summary How to create custom templates.
+#labels Phase-Implementation,Featured
 
 = Introduction =
 

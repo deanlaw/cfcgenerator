@@ -20,6 +20,7 @@
         ,  TABLE_NAME
         , 'TABLE'   TABLE_TYPE
 			FROM all_tables
+			ORDER BY TABLE_NAME
 		</cfquery>
 		<cfloop query="qAllTables">
 			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.table_name,qAllTables.table_type) />

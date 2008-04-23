@@ -20,10 +20,10 @@
         ,  TABLE_NAME
         , 'TABLE'   TABLE_TYPE
 			FROM all_tables
-			ORDER BY TABLE_NAME
+			order by owner, TABLE_NAME
 		</cfquery>
 		<cfloop query="qAllTables">
-			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.table_name,qAllTables.table_type) />
+			<cfset objTable = createObject("component","cfcgenerator.com.cf.model.datasource.table.table").init(qAllTables.owner & "." & qAllTables.table_name,qAllTables.table_type) />
 			<cfset arrayAppend(arrReturn,objTable) />
 		</cfloop>
 		<cfreturn arrReturn />
@@ -40,7 +40,14 @@
 	<cffunction name="setTable" access="public" output="false" returntype="void">
 		<cfargument name="table" type="string" required="true" />
 		
-		<cfset variables.table = arguments.table />
+		<cfif listlen(arguments.table,".") gt 1>
+			<cfset variables.schema = listfirst(arguments.table,".") />
+			<cfset variables.table = listlast(arguments.table,".") />
+		<cfelse>
+			<cfset variables.schema = "" />
+			<cfset variables.table = arguments.table />
+		</cfif>
+
 		<cfset setTableMetadata() />
 		<cfset setPrimaryKeyList() />
 	</cffunction>
@@ -254,7 +261,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#">
+				<dbtable name="<cfif len(variables.schema)>#variables.schema#.</cfif>#variables.table#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif variables.tableMetadata.type_name EQ 'varchar2' AND variables.tableMetadata.length EQ 35 AND listFind(variables.primaryKeyList,variables.tableMetadata.column_name)>uuid<cfelse>#translateDataType(listFirst(variables.tableMetadata.type_name," "))#</cfif>"

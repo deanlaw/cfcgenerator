@@ -202,82 +202,82 @@
 	
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="binary">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="bit">
-				<cfreturn "Boolean" />
+				<cfreturn "boolean" />
 			</cfcase>
 			<cfcase value="char">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="datetime">
-				<cfreturn "Date" />
+				<cfreturn "date" />
 			</cfcase>
 			<cfcase value="decimal">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="double">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="float">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="image">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="int">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="money">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="nchar">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="ntext">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="numeric">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="nvarchar">
-				<cfreturn "String" />
+				<cfreturn "ntring" />
 			</cfcase>
 			<cfcase value="longtext">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="real">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="smalldatetime">
-				<cfreturn "Date" />
+				<cfreturn "date" />
 			</cfcase>
 			<cfcase value="smallint">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="smallmoney">
-				<cfreturn "Numeric" />
+				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="text">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="timestamp">
-				<cfreturn "Date" />
+				<cfreturn "date" />
 			</cfcase>
 			<cfcase value="tinyint">
-				<cfreturn "Boolean" />
+				<cfreturn "boolean" />
 			</cfcase>
 			<cfcase value="uniqueidentifier">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="varbinary">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="varchar">
-				<cfreturn "String" />
+				<cfreturn "string" />
 			</cfcase>
 		</cfswitch>
 	</cffunction>

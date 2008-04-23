@@ -10,7 +10,7 @@
 					</cfif></cfloop>)
 				VALUES
 					(
-					<cfloop from="1" to="#arrayLen(root.bean.dbtable.xmlChildren)#" index="i"><cfif root.bean.dbtable.xmlChildren[i].xmlAttributes.identity neq true><%cfqueryparam value="%arguments.#root.bean.xmlAttributes.name#.get#root.bean.dbtable.xmlChildren[i].xmlAttributes.name#()%" CFSQLType="#root.bean.dbtable.xmlChildren[i].xmlAttributes.cfSqlType#" />"<cfif root.bean.dbtable.xmlChildren[i].xmlAttributes.required neq "Yes"> null="%not len(arguments.#root.bean.xmlAttributes.name#.get<xsl:value-of select="@name" />())%"</cfif> /%><cfif i neq arrayLen(root.bean.dbtable.xmlChildren)>,</cfif>
+					<cfloop from="1" to="#arrayLen(root.bean.dbtable.xmlChildren)#" index="i"><cfif root.bean.dbtable.xmlChildren[i].xmlAttributes.identity neq true><%cfqueryparam value="%arguments.#root.bean.xmlAttributes.name#.get#root.bean.dbtable.xmlChildren[i].xmlAttributes.name#()%" CFSQLType="#root.bean.dbtable.xmlChildren[i].xmlAttributes.cfSqlType#"<cfif root.bean.dbtable.xmlChildren[i].xmlAttributes.required neq "Yes"> null="%not len(arguments.#root.bean.xmlAttributes.name#.get#root.bean.dbtable.xmlChildren[i].xmlAttributes.name#())%"</cfif> /%><cfif i neq arrayLen(root.bean.dbtable.xmlChildren)>,</cfif>
 					</cfif></cfloop>)
 			<%/cfquery%>
 			<%cfcatch type="database"%>

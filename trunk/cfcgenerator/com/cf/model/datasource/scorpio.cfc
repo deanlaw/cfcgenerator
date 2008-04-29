@@ -298,6 +298,13 @@
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>
+	
+	<cffunction name="getDriverType" access="private" output="false" returntype="string">
+		<cfset var dbVersion = "" />
+		
+		<cfdbinfo type="version" datasource="#variables.dsn#" name="dbVersion" />
+		<cfreturn dbVersion.driver_version>
+	</cffunction>
 
 	<cffunction name="getTableXML" access="public" output="false" returntype="xml">
 		<cfset var xmlTable = "" />
@@ -308,7 +315,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#">
+				<dbtable name="#variables.table#" type="#getDriverType()#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.column_size EQ 35 AND variables.tableMetadata.is_primarykey>uuid<cfelse>#translateDataType(listFirst(variables.tableMetadata.type_name," "))#</cfif>"

@@ -52,7 +52,7 @@ For reference purposes, here is the XML that is used to populate the templates (
 
 <root>
 	<bean name="component_name" path="dot.notation.component.path">
-		<dbtable name="table_name">
+		<dbtable name="table_name" type="dsn_type">
 			<column name=column_name"
 				type="data_type"
 				cfSqlType="cfsql_data_type"

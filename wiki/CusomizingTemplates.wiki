@@ -33,13 +33,13 @@ Each set of templates needs its own yac.xml file.
 For reference purposes, here is the XML that is used to populate the templates:
 {{{
 <root>
-	<bean name="name" path="dot.notation.path">
-		<dbtable name="tableName">
-			<column name="columnName"
-				type="cfDataType"
-				cfSqlType="cfSQLDataType"
+	<bean name="component_name" path="dot.notation.component.path">
+		<dbtable name="table_name" type="dsn_type">
+			<column name=column_name"
+				type="data_type"
+				cfSqlType="cfsql_data_type"
 				required="yes|no"
-				length="##"
+				length="int"
 				primaryKey="yes|no"
 				identity="true|false" />
 		</dbtable>

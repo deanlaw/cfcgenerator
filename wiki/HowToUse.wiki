@@ -10,7 +10,7 @@ Basic usage of the code generator.
 When the generator initially loads it it will request your ColdFusion Administrator password, after which it should automatically populate several select boxes.
 The first is available DSNs (for supported dbms see above). Once the DSN loads, the tables
 select should populate with a list of tables within that DSN. Lastly, the templates select
-should populate with all available xsl template options (learn more about [customizing templates CustomizingTemplates] and about the included [Templates]).
+should populate with all available xsl template options (learn more about [CustomizingTemplates customizing templates] and about the included [Templates]).
 
 To generate templates:
 

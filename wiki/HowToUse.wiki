@@ -14,15 +14,12 @@ should populate with all available xsl template options (learn more about [Custo
 
 To generate templates:
 
-  # Select the DSN that contains the table you would like to generate against.
-  # Select the table from the list of tables.
-  # Optionally, choose a different template to generate against.
-  # Required, specify the default dot notation cfc path (i.e. com.user.user for
-  /com/user/user.cfc)
-  # Optionally, specify a relative site root system path (this is required to activate the
-  save file capability)
-  # Optionally, check "Strip extra line breaks" if the generated code displays with extra
-  line breaks
+  # Select the DSN that contains the table you would like to generate against. *(required)*
+  # Select the table from the list of tables. *(required)*
+  # Choose a different template to generate against _(optional)_
+  # Specify the default dot notation cfc path (i.e. com.user.user for /com/user/user.cfc) *(required)*
+  # Specify a relative site root system path (this is required to activate the save file capability) _(optional)_
+  # Check "Strip extra line breaks" if the generated code displays with extra line breaks _(optional)_
   # Click Generate
 
 Once the code generates, you will receive a set of tabs relating to each item you

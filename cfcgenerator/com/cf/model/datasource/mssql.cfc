@@ -92,7 +92,7 @@
 				<cfreturn "cf_sql_real" />
 			</cfcase>
 			<cfcase value="smalldatetime">
-				<cfreturn "cf_sql_date" />
+				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
 			<cfcase value="smallint">
 				<cfreturn "cf_sql_smallint" />
@@ -116,6 +116,12 @@
 				<cfreturn "cf_sql_varbinary" />
 			</cfcase>
 			<cfcase value="varchar">
+				<cfreturn "cf_sql_varchar" />
+			</cfcase>
+			<cfcase value="xml">
+				<cfreturn "cf_sql_longvarchar" />
+			</cfcase>
+			<cfcase value="sql_variant">
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 		</cfswitch>
@@ -195,6 +201,12 @@
 				<cfreturn "binary" />
 			</cfcase>
 			<cfcase value="varchar">
+				<cfreturn "string" />
+			</cfcase>
+			<cfcase value="xml">
+				<cfreturn "string" />
+			</cfcase>
+			<cfcase value="sql_variant">
 				<cfreturn "string" />
 			</cfcase>
 		</cfswitch>

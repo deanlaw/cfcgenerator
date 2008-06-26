@@ -64,24 +64,20 @@
 		
 		<cfset var content = "" />
 		<cfset var root = arguments.xmlTable.root />
-		<cfset var tempFilePath = '../../../temp/#createUUID()#.cfm' />
+		<cfset var tempFileName = '#createUUID()#.cfm' />
+		<cfset var tempDirPath = getDirectoryFromPath(getCurrentTemplatePath()) & 'temp' />
 		
-		<cfif not directoryExists(expandPath('../../../temp/'))>
-			<cfdirectory action="create" directory="#expandPath('../../../temp')#">
+		<cfif not directoryExists(tempDirPath)>
+			<cfdirectory action="create" directory="#tempDirPath#">
 		</cfif>
 		
 		<!--- write the cfm to a hard file so it can be dynamically evaluated --->
-		<cffile action="write" file="#expandPath(tempFilePath)#" output="#arguments.template#" />
+		<cffile action="write" file="#tempDirPath#/#tempFileName#" output="#arguments.template#" />
 		<cfsavecontent variable="content">
-			<!--- workaround - looks like there is a bug in 7.0.2 multi-server (may be mac only) --->
-			<cfif getBaseTemplatePath() eq getCurrentTemplatePath()>
-				<cfinclude template="../com/#tempFilePath#" />
-			<cfelse>
-				<cfinclude template="../#tempFilePath#" />
-			</cfif>
+			<cfinclude template="temp/#tempFileName#" />
 		</cfsavecontent>
 		<cfset content =  replaceList(content,"<%,%>,%","<,>,##") />
-		<cffile action="delete" file="#expandPath(tempFilePath)#" />
+		<cffile action="delete" file="#tempDirPath#/#tempFileName#" />
 		
 		<cfreturn content />
 	</cffunction>

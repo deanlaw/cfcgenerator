@@ -1,11 +1,12 @@
 package com.model 
 {
  	import com.adobe.cairngorm.model.ModelLocator;
-	import mx.collections.ArrayCollection;
-	import com.vo.datasourceVO;
-	import com.vo.tableVO;
-	import com.vo.generatedPageVO;
-	import com.vo.directoryVO;
+ 	import com.vo.datasourceVO;
+ 	import com.vo.directoryVO;
+ 	import com.vo.generatedPageVO;
+ 	import com.vo.tableVO;
+ 	
+ 	import mx.collections.ArrayCollection;
 
  	[Bindable]
 	public class ModelLocator implements com.adobe.cairngorm.model.ModelLocator
@@ -38,6 +39,13 @@ package com.model
 		public var generatedPage : generatedPageVO;
 		public var selectedDirectory : directoryVO;
 		public var directories : ArrayCollection = new ArrayCollection();
+		// again hacking in generate all
+		public var tablesToGenerate : ArrayCollection = new ArrayCollection();
+		public var currentObjectPath: String = "";
+		public var currentObjectFilePath : String = "";
+		public var currentObjectStripBreaks : Boolean = false;
+		public var currentObjectTemplate : String;
+		public var openMultiGeneratePopup : Boolean = false;
 		
 	}	
 }

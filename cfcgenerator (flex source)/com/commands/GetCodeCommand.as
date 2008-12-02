@@ -26,7 +26,12 @@ package com.commands {
 		public function result( rpcEvent : Object ) : void {
 			CursorManager.removeBusyCursor();
 			model.generatedPages.source = rpcEvent.result as Array;
+			
+			// hacking away at adding the multi generate
+			if (model.tablesToGenerate.length > 0) {
+				model.openMultiGeneratePopup = true;
 			}
+		}
 		
 		public function fault( rpcEvent : Object ) : void {
 			CursorManager.removeBusyCursor();

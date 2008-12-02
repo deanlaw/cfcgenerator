@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox
+<mx:Canvas
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:view="com.view.*"
 	xmlns:utils="utils.*"
 	width="550"
-	height="400">
+	height="400" visible="{model.generatedPages.length > 0}">
 	<mx:Script>
 		<![CDATA[
 			import com.model.ModelLocator;
@@ -25,4 +25,4 @@
 			<view:CodeTabCanvas thisPage="{pageRepeat.currentItem.pageName}" thisContent="{pageRepeat.currentItem.content}" thisPath="{pageRepeat.currentItem.filePath}" />
 		</mx:Repeater>
 	</mx:TabNavigator>
-</mx:VBox>
+</mx:Canvas>

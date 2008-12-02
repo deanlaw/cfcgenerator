@@ -5,7 +5,7 @@
 	verticalGap="10"
 	horizontalAlign="center"
 	width="300"
-	height="280"
+	height="315"
 	paddingTop="5"
 	title="Generator Details">
 	<mx:Style>
@@ -27,6 +27,7 @@
 			import mx.managers.PopUpManager;
 			import com.model.ModelLocator;
 			import mx.utils.UIDUtil;
+			import com.vo.Clone;
 			
 			[Bindable]
   	 		public var tables: ArrayCollection;
@@ -36,16 +37,32 @@
   	 		public var templates: ArrayCollection;
   	 		[Bindable]
 			public var model : ModelLocator = ModelLocator.getInstance();
+			
   	 		
   	 		private function generatePages() :void {
   	 		var table : tableVO = tableSelect.selectedItem as tableVO;
   	 		var datasource : datasourceVO = datasource;
   	 		var pathValidate:ValidationResultEvent = stringIsRequired.validate(pathTxt.text);
+  	 		var clone:Clone = new Clone();
+  	 		
 			if (pathValidate.type == ValidationResultEvent.VALID){
 				pathTxt.errorString = ""; 
 				pathLabel.setStyle("styleName", "valid");
 				var template : String = templateSelect.selectedItem as String;
 				var stripBreaks : Boolean = stripLineBreaks.selected;
+				// I am hacking in a way to generate all tables at once. this should probably be rethought but I want to rebuild the whole thing anyway
+				if (generateAll.selected == true) {
+					model.tablesToGenerate.source = clone.doClone(model.tables.source);
+					model.currentObjectPath = pathTxt.text;
+					model.currentObjectFilePath = rootpathTxt.text;
+					model.currentObjectStripBreaks = stripBreaks;
+					model.currentObjectTemplate = template;
+					// remove the currently selected table since we are generating that anyway
+					var currentItem:int = model.tables.getItemIndex(tableSelect.selectedItem);
+					if (currentItem >= 0) {
+						model.tablesToGenerate.removeItemAt(currentItem);
+					}
+				}
 				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(datasource,table,pathTxt.text,template,stripBreaks,rootpathTxt.text);
   				CairngormEventDispatcher.getInstance().dispatchEvent( event );
   				}
@@ -57,6 +74,16 @@
 			private function openDirectories() :void {
 				model.openPopup = UIDUtil.createUID();
 			}
+			
+			private function enableGenerateAll():void {
+				if (rootpathTxt.text.length > 0) {
+					generateAll.enabled = true;
+				}
+				else {
+					generateAll.enabled = false;
+				}
+			}
+
 		]]>
 	</mx:Script>
 	<mx:StringValidator id="stringIsRequired" minLength="1" />
@@ -69,13 +96,11 @@
 		<mx:TextInput id="pathTxt" width="200" toolTip="Dot notation path to your component under your site root." />
 		<mx:Label text="File System Save Path:" />
 		<mx:HBox>
-			<mx:TextInput id="rootpathTxt" text="{model.selectedDirectory.path}" toolTip="Absolute path to save." width="175" />
+			<mx:TextInput id="rootpathTxt" text="{model.selectedDirectory.path}" toolTip="Absolute path to save." width="175" change="enableGenerateAll()" />
 			<mx:Button id="btnOpenDirectories" label="Browse" click="openDirectories()" />
 		</mx:HBox>
+		<mx:CheckBox label="Strip extra line breaks?" id="stripLineBreaks" toolTip="Some systems show extra line breaks in the generated output." />
+		<mx:CheckBox label="Generate All Tables Same Settings?" id="generateAll" enabled="false" toolTip="This will walk you through generating every table in the current DSN." />
 	</mx:VBox>
-	<mx:HBox verticalGap="0">
-		<mx:Label text="Strip extra line breaks?" />
-		<mx:CheckBox id="stripLineBreaks" toolTip="Some systems show extra line breaks in the generated output." />
-	</mx:HBox>
 	<mx:Button id="generatrBtn" label="Generate" click="generatePages()" />
 </mx:Panel>

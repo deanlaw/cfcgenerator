@@ -6,12 +6,12 @@
 	xmlns:view="com.view.*"
 	xmlns:utils="utils.*"
 	pageTitle="Illudium PU-36 Code Generator"
-	layout="absolute"
-	creationComplete="initApp()">
+	layout="absolute">
 	
 	<mx:Script>
 	<![CDATA[
 		import com.view.AdminPassPanel;
+		import com.view.MultiGeneratePanel;
 		import mx.controls.Alert;
 		import mx.core.Container;
 		import com.adobe.cairngorm.control.CairngormEventDispatcher;
@@ -37,6 +37,13 @@
   			mx.managers.PopUpManager.addPopUp(adminPassPanel,mainLayout,true);
   			mx.managers.PopUpManager.centerPopUp(adminPassPanel);
 		}
+		private function generateAllPopup():void {
+			if (model.openMultiGeneratePopup == true) {
+				var multiGeneratePanel:MultiGeneratePanel = new MultiGeneratePanel();
+	  			mx.managers.PopUpManager.addPopUp(multiGeneratePanel,mainLayout,true);
+	  			mx.managers.PopUpManager.centerPopUp(multiGeneratePanel);
+	  		}
+		}
 		private function openDirectories() :void {
 			if (model.directories.length == 0) {
 				var getRootsEvent : GetRootsEvent = new GetRootsEvent();
@@ -58,6 +65,7 @@ Application {
 	<business:Services id="generatorServices"/>
 	<control:GeneratorControl id="controller"/>
 	<utils:Observe source="{ model.reloadAdminPassPopup }" handler="{ adminPassPopup }"/>
+	<utils:Observe source="{ model.openMultiGeneratePopup }" handler="{ generateAllPopup }"/>
 	<utils:Observe source="{ model.openPopup }" handler="{ openDirectories }"/>
-	<view:layoutCanvas id="mainLayout" datasources="{model.datasources}" tables="{model.tables}" datasource="{model.datasource}" templates="{model.templates}" />	
+	<view:layoutCanvas id="mainLayout" datasources="{model.datasources}" tables="{model.tables}" datasource="{model.datasource}" templates="{model.templates}" creationComplete="initApp()" />	
 </mx:Application>

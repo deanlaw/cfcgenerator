@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="270" height="150" verticalAlign="middle" horizontalAlign="center" title="Generate All Tables"
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="350" height="150" verticalAlign="middle" horizontalAlign="center" title="Generate All Tables"
 		creationComplete="handleCreationComplete()">
 	<mx:Script>
 		<![CDATA[
@@ -62,6 +62,12 @@
 					generateNewPathString();
 				}
 			}
+			
+			private function cancel():void {
+				model.tablesToGenerate.removeAll();
+				
+				PopUpManager.removePopUp(this);
+			}
 		]]>
 	</mx:Script>
 	<mx:VBox verticalAlign="middle" horizontalAlign="right">
@@ -71,9 +77,10 @@
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalAlign="center">
 			<mx:Label text="CFC Path:" />
-			<mx:TextInput id="currentObjectPath" text="{newPath}" />
+			<mx:TextInput id="currentObjectPath" text="{newPath}" width="255" />
 		</mx:HBox>
 		<mx:HBox>
+			<mx:Button id="cancelAll" label="Cancel" click="cancel();" />
 			<mx:Button id="generateSkip" label="Skip" click="skipNext();" />
 			<mx:Button id="generateSubmit" label="Submit" click="generateNext();" />
 		</mx:HBox>

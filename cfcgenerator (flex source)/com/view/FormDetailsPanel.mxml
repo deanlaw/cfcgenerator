@@ -58,11 +58,6 @@
 					model.currentObjectFilePath = rootpathTxt.text;
 					model.currentObjectStripBreaks = stripBreaks;
 					model.currentObjectTemplate = template;
-					// remove the currently selected table since we are generating that anyway
-					var currentItem:int = model.tables.getItemIndex(tableSelect.selectedItem);
-					if (currentItem >= 0) {
-						model.tablesToGenerate.removeItemAt(currentItem);
-					}
 				}
 				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(datasource,table,pathTxt.text,template,stripBreaks,rootpathTxt.text);
   				CairngormEventDispatcher.getInstance().dispatchEvent( event );

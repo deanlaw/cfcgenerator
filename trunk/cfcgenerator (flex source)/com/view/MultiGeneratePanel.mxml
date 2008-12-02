@@ -23,11 +23,21 @@
 			private function handleCreationComplete():void {
 				model.openMultiGeneratePopup = false;
 				
-				generateNewPathString();
-				
 				for each ( var page:Object in model.generatedPages) {
-					var event : SaveFileEvent = new SaveFileEvent(page.content,page.filePath);
+					var event : SaveFileEvent = new SaveFileEvent(page.content,page.filePath,false);
 		  			CairngormEventDispatcher.getInstance().dispatchEvent( event );
+		 		}
+		 		
+		 		// now remove the current item
+		 		model.tablesToGenerate.removeItemAt(0);
+		 		
+		 		// if that was the last item just close the dialog
+		 		if (model.tablesToGenerate.length == 0) {
+					PopUpManager.removePopUp(this);
+				}
+				else {
+					generateNewPathString();
+		 			currentTable.text = model.tablesToGenerate[0].tableName;
 		 		}
 			}
 		
@@ -36,7 +46,6 @@
 				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(model.datasource,model.tablesToGenerate[0],model.currentObjectPath,model.currentObjectTemplate,model.currentObjectStripBreaks,model.currentObjectFilePath);
   				CairngormEventDispatcher.getInstance().dispatchEvent( event );
   				PopUpManager.removePopUp(this);
-  				model.tablesToGenerate.removeItemAt(0);
 			}
 			
 			private function generateNewPathString():void {
@@ -73,7 +82,7 @@
 	<mx:VBox verticalAlign="middle" horizontalAlign="right">
 		<mx:HBox horizontalAlign="left" width="100%">
 			<mx:Label text="Current Table:" />
-			<mx:Label id="currentTable" text="{model.tablesToGenerate[0].tableName}" />
+			<mx:Label id="currentTable" text="" />
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalAlign="center">
 			<mx:Label text="CFC Path:" />

@@ -1,26 +1,29 @@
 package com.commands {
 
-	import mx.rpc.IResponder;
 	import com.adobe.cairngorm.commands.Command;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.business.GeneratorServicesDelegate;
-	import com.model.ModelLocator;
-	import mx.controls.Alert;
 	import com.control.SaveFileEvent;
+	import com.model.ModelLocator;
+	
+	import mx.controls.Alert;
+	import mx.rpc.IResponder;
 
 	public class SaveFileCommand implements Command, IResponder {
 
 		private var model : ModelLocator = ModelLocator.getInstance();
+		private var showAlert : Boolean = true;
 		
 		public function execute( cgEvent:CairngormEvent ) : void {
 			var delegate : GeneratorServicesDelegate = new GeneratorServicesDelegate( this );
 			var saveFileEvent : SaveFileEvent = SaveFileEvent( cgEvent );
+			showAlert = saveFileEvent.showAlert;
 			delegate.saveFileService(saveFileEvent.code,saveFileEvent.filePath);
 			}
 		
 		public function result( rpcEvent : Object ) : void {
 			// hacking away again for multi save
-			if (model.tablesToGenerate.length == 0) {
+			if (showAlert) {
 				mx.controls.Alert.show(rpcEvent.result,"Save File");
 			}
 		}

@@ -13,10 +13,17 @@
 			import com.vo.tableVO
 			
 			[Bindable]
-			public var model : ModelLocator = ModelLocator.getInstance();
+			private var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			private var newPath : String = "";
+			
+			private var newPathArray : Array;
 			
 			private function handleCreationComplete():void {
 				model.openMultiGeneratePopup = false;
+				
+				generateNewPathString();
 				
 				for each ( var page:Object in model.generatedPages) {
 					var event : SaveFileEvent = new SaveFileEvent(page.content,page.filePath);
@@ -32,6 +39,18 @@
   				model.tablesToGenerate.removeItemAt(0);
 			}
 			
+			private function generateNewPathString():void {
+				newPath = "";
+				
+				newPathArray = model.currentObjectPath.split(".");
+				
+				for (var i:int=0;i < newPathArray.length - 1;i++) {
+					newPath = newPath + newPathArray[i] + ".";
+				}
+				
+				newPath += model.tablesToGenerate[0].tableName;
+			}
+			
 			private function skipNext():void {
 				model.tablesToGenerate.removeItemAt(0);
 				
@@ -40,6 +59,7 @@
 				}
 				else {
 					currentTable.text = model.tablesToGenerate[0].tableName;
+					generateNewPathString();
 				}
 			}
 		]]>
@@ -51,7 +71,7 @@
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalAlign="center">
 			<mx:Label text="CFC Path:" />
-			<mx:TextInput id="currentObjectPath" text="{model.currentObjectPath}" />
+			<mx:TextInput id="currentObjectPath" text="{newPath}" />
 		</mx:HBox>
 		<mx:HBox>
 			<mx:Button id="generateSkip" label="Skip" click="skipNext();" />

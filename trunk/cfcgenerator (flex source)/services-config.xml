@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+	
+	<services>
+	    <service id="remoting-service" 
+		    class="flex.messaging.services.RemotingService" 
+		    messageTypes="flex.messaging.messages.RemotingMessage">
+		
+		    <adapters>
+		        <adapter-definition id="cf-object" class="coldfusion.flash.messaging.ColdFusionAdapter" default="true"/>
+		    </adapters>
+		
+		    <default-channels>
+		        <channel ref="my-cfamf"/>
+		    </default-channels>
+		
+		    <destination id="ColdFusion">
+		        <channels>
+		            <channel ref="my-cfamf"/>
+		        </channels>
+		        <properties>
+		            <source>remote.*</source>
+		            <!-- define the resolution rules and access level of the cfc being invoked -->
+		            <access>
+		                <!-- Use the ColdFusion mappings to find CFCs, by default only CFC files under your webroot can be found. -->
+		                <use-mappings>false</use-mappings>
+		                <!-- allow "public and remote" or just "remote" methods to be invoked -->
+		                <method-access-level>remote</method-access-level>
+		            </access>
+		
+		            <property-case>
+		                <!-- cfc property names -->
+		                <force-cfc-lowercase>false</force-cfc-lowercase>
+		                <!-- Query column names -->
+		                <force-query-lowercase>false</force-query-lowercase>
+		                <!-- struct keys -->
+		                <force-struct-lowercase>false</force-struct-lowercase>
+		            </property-case>
+		        </properties>
+		    </destination>
+		
+		</service>
+	</services>
+
+    <security>
+        <login-command class="flex.messaging.security.JRunLoginCommand" server="JRun"/>
+    </security>
+
+    <channels>
+
+        <!--  CF Based Endpoints -->
+        <channel-definition id="my-cfamf" class="mx.messaging.channels.AMFChannel">
+            
+            <!-- Localhost CF Installation (You may have to update port if you are using the internal web server) -->
+            <endpoint uri="http://localhost/flex2gateway/" class="flex.messaging.endpoints.AMFEndpoint"/>
+            
+            <properties>
+                <polling-enabled>false</polling-enabled>
+                <serialization>
+                    <instantiate-types>false</instantiate-types>
+                </serialization>
+            </properties>
+        </channel-definition>
+
+    </channels>
+
+    <logging>
+        <target class="flex.messaging.log.ConsoleTarget" level="Error">
+            <properties>
+                <prefix>[Flex] </prefix>
+                <includeDate>false</includeDate>
+                <includeTime>false</includeTime>
+                <includeLevel>false</includeLevel>
+                <includeCategory>false</includeCategory>
+            </properties>
+            <filters>
+                <pattern>Endpoint.*</pattern>
+                <pattern>Service.*</pattern>
+                <pattern>Configuration</pattern>
+                <pattern>Message.*</pattern>
+            </filters>
+        </target>
+    </logging>
+
+    <system>
+        <manageable>false</manageable>
+    </system>
+
+</services-config>

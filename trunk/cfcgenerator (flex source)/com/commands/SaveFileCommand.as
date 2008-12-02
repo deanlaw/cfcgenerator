@@ -19,7 +19,10 @@ package com.commands {
 			}
 		
 		public function result( rpcEvent : Object ) : void {
-			mx.controls.Alert.show(rpcEvent.result,"Save File");
+			// hacking away again for multi save
+			if (model.tablesToGenerate.length == 0) {
+				mx.controls.Alert.show(rpcEvent.result,"Save File");
+			}
 		}
 		
 		public function fault( rpcEvent : Object ) : void {

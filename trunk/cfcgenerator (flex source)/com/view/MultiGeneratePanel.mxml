@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="270" height="150" verticalAlign="middle" horizontalAlign="center" title="Generate All Tables"
+		creationComplete="handleCreationComplete()">
+	<mx:Script>
+		<![CDATA[
+			import com.vo.generatedPageVO;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.control.GetGeneratedCodeEvent;
+			import com.control.SaveFileEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+			import com.model.ModelLocator;
+			import com.vo.tableVO
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private function handleCreationComplete():void {
+				model.openMultiGeneratePopup = false;
+				
+				for each ( var page:Object in model.generatedPages) {
+					var event : SaveFileEvent = new SaveFileEvent(page.content,page.filePath);
+		  			CairngormEventDispatcher.getInstance().dispatchEvent( event );
+		 		}
+			}
+		
+			private function generateNext():void {
+				model.currentObjectPath = currentObjectPath.text;
+				var event : GetGeneratedCodeEvent = new GetGeneratedCodeEvent(model.datasource,model.tablesToGenerate[0],model.currentObjectPath,model.currentObjectTemplate,model.currentObjectStripBreaks,model.currentObjectFilePath);
+  				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+  				PopUpManager.removePopUp(this);
+  				model.tablesToGenerate.removeItemAt(0);
+			}
+			
+			private function skipNext():void {
+				model.tablesToGenerate.removeItemAt(0);
+				
+				if (model.tablesToGenerate.length == 0) {
+					PopUpManager.removePopUp(this);
+				}
+				else {
+					currentTable.text = model.tablesToGenerate[0].tableName;
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox verticalAlign="middle" horizontalAlign="right">
+		<mx:HBox horizontalAlign="left" width="100%">
+			<mx:Label text="Current Table:" />
+			<mx:Label id="currentTable" text="{model.tablesToGenerate[0].tableName}" />
+		</mx:HBox>
+		<mx:HBox width="100%" horizontalAlign="center">
+			<mx:Label text="CFC Path:" />
+			<mx:TextInput id="currentObjectPath" text="{model.currentObjectPath}" />
+		</mx:HBox>
+		<mx:HBox>
+			<mx:Button id="generateSkip" label="Skip" click="skipNext();" />
+			<mx:Button id="generateSubmit" label="Submit" click="generateNext();" />
+		</mx:HBox>
+	</mx:VBox>
+</mx:Panel>

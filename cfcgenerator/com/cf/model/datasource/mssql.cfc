@@ -83,7 +83,7 @@
 				<cfreturn "cf_sql_longvarchar" />
 			</cfcase>
 			<cfcase value="numeric">
-				<cfreturn "cf_sql_integer" />
+				<cfreturn "cf_sql_numeric" />
 			</cfcase>
 			<cfcase value="nvarchar">
 				<cfreturn "cf_sql_varchar" />

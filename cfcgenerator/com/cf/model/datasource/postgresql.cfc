@@ -194,7 +194,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#" type="postgresql">
+				<dbtable name="#variables.table#" type="postgresql" dsn="#variables.dsn#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif listFindNoCase('char,character', variables.tableMetadata.type_name) AND variables.tableMetadata.length EQ 35>uuid<cfelse>#translateDataType(listFirst(variables.tableMetadata.type_name," "))#</cfif>"

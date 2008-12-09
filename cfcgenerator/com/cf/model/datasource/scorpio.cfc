@@ -315,7 +315,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#" type="#getDriverType()#">
+				<dbtable name="#variables.table#" type="#getDriverType()#" dsn="#variables.dsn#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.column_size EQ 35 AND variables.tableMetadata.is_primarykey>uuid<cfelse>#translateDataType(listFirst(variables.tableMetadata.type_name," "))#</cfif>"

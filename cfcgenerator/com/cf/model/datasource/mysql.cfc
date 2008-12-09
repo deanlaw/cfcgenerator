@@ -412,7 +412,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#" type="mysql">
+				<dbtable name="#variables.table#" type="mysql" dsn="#variables.dsn#">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.length EQ 35 AND listFind(variables.primaryKeyList,variables.tableMetadata.column_name)>uuid<cfelse>#translateDataType(variables.tableMetadata.type_name)#</cfif>"

@@ -31,12 +31,17 @@
 		<cfset var content = "" />
 		<cfset var thisRootPath = "" />
 		<cfset var objPage = "" />
+		<cfset var prep = "" />
+		<cfset var path = '' />
+		<cfset var lastpath = '' />
 		<cfset var arrComponents = arrayNew(1) />
 		
 		<!--- loop through cfc types --->
 		<cfloop from="1" to="#arrayLen(variables.config.generator.xmlChildren)#" index="i">
 			<cfset template = buildTemplate(variables.config.generator.xmlChildren[i]) />
 			<cfset name = variables.config.generator.xmlChildren[i].xmlName />
+			<cfset path = variables.rootPath />
+
 			<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"templateType") and variables.config.generator.xmlChildren[i].xmlAttributes.templateType eq "cfm">
 				<cfset content = processCFMTemplate(template,arguments.xmlTable) />
 			<cfelse>
@@ -44,11 +49,16 @@
 			</cfif>
 			<cfset thisRootPath = "" />
 			<cfif len(variables.rootPath) and structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileType")>
-				<!--- if text to append to file name is specified use it otherwise default to the object type name --->
+				<!--- if text to (pre|ap)pend to file name is specified use it otherwise default to the object type name --->
+				<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileNamePrepend")>
+					<cfset prep=variables.config.generator.xmlChildren[i].xmlAttributes.fileNamePrepend>
+					<cfset lastpath=listgetat(path, listLen(path,"/\")-1 , "/\")&getOSFileSeparator()>
+					<cfset path=replaceNoCase(path,lastpath,lastpath&prep)>
+				</cfif>
 				<cfif structKeyExists(variables.config.generator.xmlChildren[i].xmlAttributes,"fileNameAppend")>
-					<cfset thisRootPath = variables.rootPath & variables.config.generator.xmlChildren[i].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+					<cfset thisRootPath = path & variables.config.generator.xmlChildren[i].xmlAttributes.fileNameAppend & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
 				<cfelse>
-					<cfset thisRootPath = variables.rootPath & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
+					<cfset thisRootPath = path & ucase(left(name,1)) & right(name,len(name)-1) & "." & variables.config.generator.xmlChildren[i].xmlAttributes.fileType  />
 				</cfif>
 			</cfif>
 			<cfset objPage = createObject("component","cfcgenerator.com.cf.model.code.generatedPage").init(name,template,content,thisRootPath) />

@@ -1,17 +1,17 @@
 <cfcomponent name="mssql">
-	
+
 	<cffunction name="init" access="public" output="false" returntype="mssql">
 		<cfargument name="dsn" type="string" required="true" />
-		
+
 		<cfset setDSN(arguments.dsn) />
 		<cfreturn this />
 	</cffunction>
-	
+
 	<cffunction name="getTables" access="public" output="false" returntype="array">
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />
-		
+
 		<cfif not len(variables.dsn)>
 			<cfthrow message="you must provide a dsn" />
 		</cfif>
@@ -24,7 +24,7 @@
 		</cfloop>
 		<cfreturn arrReturn />
 	</cffunction>
-	
+
 	<cffunction name="setDSN" access="public" output="false" returntype="void">
 		<cfargument name="dsn" type="string" required="true" />
 		<cfset variables.dsn = arguments.dsn />
@@ -35,16 +35,16 @@
 	</cffunction>
 	<cffunction name="setTable" access="public" output="false" returntype="void">
 		<cfargument name="table" type="string" required="true" />
-		
+
 		<cfset variables.table = arguments.table />
 		<cfset setTableMetadata() />
 		<cfset setPrimaryKeyList() />
 	</cffunction>
-	
+
 	<!--- these functions are modified from reactor v0.1 --->
 	<cffunction name="translateCfSqlType" hint="I translate the MSSQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-		
+
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
 				<cfreturn "cf_sql_bigint" />
@@ -126,10 +126,10 @@
 			</cfcase>
 		</cfswitch>
 	</cffunction>
-	
+
 	<cffunction name="translateDataType" hint="I translate the MSSQL data type names into ColdFusion data type names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-		
+
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
 				<cfreturn "numeric" />
@@ -211,7 +211,7 @@
 			</cfcase>
 		</cfswitch>
 	</cffunction>
-	
+
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
 		<cfset var qTable = "" />
 		<!--- get table column info --->
@@ -233,13 +233,14 @@
 				END AS [IDENTITY]
 			FROM INFORMATION_SCHEMA.COLUMNS as c
 			WHERE c.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.table#" />
+				and c.COLUMN_NAME != 'MSREPL_TRAN_VERSION'
 		</cfquery>
 		<cfset variables.tableMetadata = qTable />
 	</cffunction>
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>
-	
+
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />

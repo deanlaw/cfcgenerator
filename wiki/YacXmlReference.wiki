@@ -1,0 +1,22 @@
+#summary Reference to all the attributes honoured in the yac.xml file
+
+== <generator> ==
+
+None
+
+== Child tags of generator ==
+
+<filename fileNamePrepend="<string>" fileNameAppend="<string>" fileType="<string>" templateType="<cfm or leave out attribute entirly>">
+
+Where 'filename' must be the name of a file in same dir. as yac.xml, with an extension of .cfm or .xsl as determined by the templateType attribute.
+
+fileNamePrepend and fileNameAppend add strings to the start or end of the final file name. FileNamePrepend may contain slashes to put the output in a subdirectory.
+
+fileType will be appended to the final file name prepended by a full stop i.e. it defines the extension.
+
+== Children of child tags of generator ==
+
+<include file="filenameString" />
+
+filenameString must be a file name including the extension that lives in a subfolder of the folder yac.xml is in. The name of the folder must match the name of the parent tag.
+The result of this template will be added to the result of the main template defined by that parent tag, at the point where the template says `<!-- custom code -->`

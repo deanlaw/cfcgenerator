@@ -1,17 +1,17 @@
 <cfcomponent name="Oracle">
-	
+
 	<cffunction name="init" access="public" output="false" returntype="Oracle">
 		<cfargument name="dsn" type="string" required="true" />
-		
+
 		<cfset setDSN(arguments.dsn) />
 		<cfreturn this />
 	</cffunction>
-	
+
 	<cffunction name="getTables" access="public" output="false" returntype="array">
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />
-		
+
 		<cfif not len(variables.dsn)>
 			<cfthrow message="you must provide a dsn" />
 		</cfif>
@@ -28,7 +28,7 @@
 		</cfloop>
 		<cfreturn arrReturn />
 	</cffunction>
-	
+
 	<cffunction name="setDSN" access="public" output="false" returntype="void">
 		<cfargument name="dsn" type="string" required="true" />
 		<cfset variables.dsn = arguments.dsn />
@@ -39,7 +39,7 @@
 	</cffunction>
 	<cffunction name="setTable" access="public" output="false" returntype="void">
 		<cfargument name="table" type="string" required="true" />
-		
+
 		<cfif listlen(arguments.table,".") gt 1>
 			<cfset variables.schema = listfirst(arguments.table,".") />
 			<cfset variables.table = listlast(arguments.table,".") />
@@ -51,7 +51,7 @@
 		<cfset setTableMetadata() />
 		<cfset setPrimaryKeyList() />
 	</cffunction>
-	
+
 	<!--- these functions are modified from reactor --->
 	<cffunction name="translateCfSqlType" hint="I translate the Oracle data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
@@ -121,7 +121,7 @@
 		</cfswitch>
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 	</cffunction>
-	
+
 	<cffunction name="translateDataType" hint="I translate the Oracle data type names into ColdFusion data type names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
 		<cfswitch expression="#arguments.typeName#">
@@ -190,16 +190,16 @@
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 
 	</cffunction>
-	
+
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
 		<cfset var qTable = "" />
 		<!--- get table column info --->
 		<!--- This is a modified version of the query in sp_columns --->
 		<cfquery name="qTable" datasource="#variables.dsn#">
 			 SELECT
-             	    col.COLUMN_NAME       as COLUMN_NAME,
+             	    lower(col.COLUMN_NAME)       as COLUMN_NAME,
                   /* Oracle has no equivalent to autoincrement or  identity */
-                  'false'                     AS "IDENTITY",                    
+                  'false'                     AS "IDENTITY",
                   CASE
                         WHEN col.NULLABLE = 'Y' AND col.DATA_DEFAULT IS NULL THEN 1 /* a column is defined as nullable only if it doesn't have a default */
                         ELSE 0
@@ -231,7 +231,7 @@
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>
-	
+
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />

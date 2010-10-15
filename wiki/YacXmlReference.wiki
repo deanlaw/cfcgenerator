@@ -10,9 +10,11 @@ None
 
 Where 'filename' must be the name of a file in same dir. as yac.xml, with an extension of .cfm or .xsl as determined by the templateType attribute.
 
-fileNamePrepend and fileNameAppend add strings to the start or end of the final file name. FileNamePrepend may contain slashes to put the output in a subdirectory.
+fileNamePrepend and fileNameAppend add strings to the start or end of the final file name. <br>
+fileNamePrepend may contain slashes to put the output in a subdirectory. <br>
+fileNameAppend appends after the name but before the full stop and extension.
 
-fileType will be appended to the final file name prepended by a full stop i.e. it defines the extension.
+fileType will be appended to the final file name prepended by a full stop i.e. it defines the extension of the generated file.
 
 == Children of child tags of generator ==
 

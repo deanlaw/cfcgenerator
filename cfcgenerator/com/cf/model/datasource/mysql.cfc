@@ -150,7 +150,7 @@
 				<cfreturn "cf_sql_integer" />
 			</cfcase>
 			<cfcase value="mediumtext">
-				<cfreturn "cf_sql_varchar" />
+				<cfreturn "cf_sql_longvarchar" />
 			</cfcase>
 			<cfcase value="money">
 				<cfreturn "cf_sql_money" />

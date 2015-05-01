@@ -1,13 +1,13 @@
 <cfcomponent name="mysql">
-	
+
 	<cffunction name="init" access="public" output="false" returntype="mysql">
 		<cfargument name="dsn" type="string" required="true" />
-		
+
 		<cfset setDSN(arguments.dsn) />
 		<cfset isMySQL5plus() />
 		<cfreturn this />
 	</cffunction>
-	
+
 	<cffunction name="isMySQL5plus" access="private" output="false" returntype="boolean">
 		<!--- a simple test to see if the information_schema exists --->
 		<cfset var qTestMySQL = "" />
@@ -27,7 +27,7 @@
 		</cfif>
 		<cfreturn rtnValue />
 	</cffunction>
-	
+
 	<cffunction name="getTables" access="public" output="false" returntype="array">
 		<cfif isMySQL5Plus()>
 			<cfreturn getTables_5() />
@@ -35,7 +35,7 @@
 			<cfreturn getTables_41() />
 		</cfif>
 	</cffunction>
-	
+
 	<!--- MySQL 4.1 support thanks to Josh Nathanson --->
 	<cffunction name="getTables_41" access="private" output="false" returntype="array">
 		<cfset var qStatus = "" />
@@ -44,11 +44,11 @@
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />
-		
+
 		<cfif not len(variables.dsn)>
 			<cfthrow errorcode="you must provide a dsn" />
 		</cfif>
-		
+
 		<cfquery name="qStatus" datasource="#variables.dsn#">
 		SHOW TABLE STATUS
 		</cfquery>
@@ -74,12 +74,12 @@
 		<cfreturn arrReturn />
 	</cffunction>
 	<!------------------------>
-	
+
 	<cffunction name="getTables_5" access="public" output="false" returntype="array">
 		<cfset var qAllTables = "" />
 		<cfset objTable = "" />
 		<cfset arrReturn = arrayNew(1) />
-		
+
 		<cfif not len(variables.dsn)>
 			<cfthrow errorcode="you must provide a dsn" />
 		</cfif>
@@ -94,7 +94,7 @@
 		</cfloop>
 		<cfreturn arrReturn />
 	</cffunction>
-	
+
 	<cffunction name="setDSN" access="public" output="false" returntype="void">
 		<cfargument name="dsn" type="string" required="true" />
 		<cfset variables.dsn = arguments.dsn />
@@ -105,16 +105,16 @@
 	</cffunction>
 	<cffunction name="setTable" access="public" output="false" returntype="void">
 		<cfargument name="table" type="string" required="true" />
-		
+
 		<cfset variables.table = arguments.table />
 		<cfset setTableMetadata() />
 		<cfset setPrimaryKeyList() />
 	</cffunction>
-	
+
 	<!--- these functions are modified from reactor v0.1 --->
 	<cffunction name="translateCfSqlType" hint="I translate the MySQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-		
+
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
 				<cfreturn "cf_sql_bigint" />
@@ -145,6 +145,12 @@
 			</cfcase>
 			<cfcase value="int">
 				<cfreturn "cf_sql_integer" />
+			</cfcase>
+			<cfcase value="mediumint">
+				<cfreturn "cf_sql_integer" />
+			</cfcase>
+			<cfcase value="mediumtext">
+				<cfreturn "cf_sql_longvarchar" />
 			</cfcase>
 			<cfcase value="money">
 				<cfreturn "cf_sql_money" />
@@ -185,6 +191,9 @@
 			<cfcase value="tinyint">
 				<cfreturn "cf_sql_tinyint" />
 			</cfcase>
+			<cfcase value="tinytext">
+				<cfreturn "cf_sql_varchar" />
+			</cfcase>
 			<cfcase value="uniqueidentifier">
 				<cfreturn "cf_sql_idstamp" />
 			</cfcase>
@@ -196,10 +205,10 @@
 			</cfcase>
 		</cfswitch>
 	</cffunction>
-	
+
 	<cffunction name="translateDataType" hint="I translate the MSSQL data type names into ColdFusion data type names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-	
+
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bigint">
 				<cfreturn "numeric" />
@@ -230,6 +239,12 @@
 			</cfcase>
 			<cfcase value="int">
 				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="mediumint">
+				<cfreturn "numeric" />
+			</cfcase>
+			<cfcase value="mediumtext">
+				<cfreturn "string" />
 			</cfcase>
 			<cfcase value="money">
 				<cfreturn "numeric" />
@@ -270,6 +285,9 @@
 			<cfcase value="tinyint">
 				<cfreturn "boolean" />
 			</cfcase>
+			<cfcase value="tinytext">
+				<cfreturn "string" />
+			</cfcase>
 			<cfcase value="uniqueidentifier">
 				<cfreturn "string" />
 			</cfcase>
@@ -281,7 +299,7 @@
 			</cfcase>
 		</cfswitch>
 	</cffunction>
-	
+
 	<cffunction name="setTableMetadata" access="public" output="false" returntype="void">
 		<cfif isMySQL5plus()>
 			<cfset setTableMetadata_5() />
@@ -330,14 +348,14 @@
 			<!--- set type and length --->
 			<cfset lgth = REFind("[0-9]+",Type,1,true)>
 			<cfset typ = REFind("[a-zA-Z]+",Type,1,true)>
-			<cfif lgth.len[1]> 
+			<cfif lgth.len[1]>
 			<!--- if lgth is found by REFind, return struct - lgth.len[1] will be nonzero --->
 				<cfset lgth_str = Mid(Type,lgth.pos[1],lgth.len[1])>
 			<cfelse>
 				<cfset lgth_str = "0">
 			</cfif>
 			<cfset typ_str = Mid(Type,typ.pos[1],typ.len[1])> <!--- there will always be a type --->
-		
+
 			<cfset QueryAddRow(qTable)>
 			<cfset QuerySetCell(qTable,"COLUMN_NAME",Field)>
 			<cfif Null is "Yes">
@@ -352,7 +370,7 @@
 			<cfelse>
 				<cfset QuerySetCell(qTable, "identity", "false")>
 			</cfif>
-	
+
 		</cfoutput>
 
 		<cfset variables.tableMetadata = qTable />
@@ -361,7 +379,7 @@
 	<cffunction name="getTableMetaData" access="public" output="false" returntype="query">
 		<cfreturn variables.tableMetadata />
 	</cffunction>
-	
+
 	<cffunction name="setPrimaryKeyList" access="public" output="false" returntype="void">
 		<cfif isMySQL5plus()>
 			<cfset setPrimaryKeyList_5() />
@@ -387,11 +405,11 @@
 		<cfset var qPrimaryKeys_pre = "" />
 		<cfset var qPrimaryKeys = "" />
 		<cfset var lstPrimaryKeys = "" />
-		
+
 		<cfquery name="qPrimaryKeys_pre" datasource= "#variables.dsn#">
 		DESCRIBE #variables.table#
 		</cfquery>
-		
+
 		<cfquery name="qPrimaryKeys" dbtype="query">
 		SELECT Field AS COLUMN_NAME FROM qPrimaryKeys_pre
 		WHERE [Key] = <cfqueryparam cfsqltype="cf_sql_varchar" value="PRI" />
@@ -412,7 +430,7 @@
 		<cfoutput>
 		<root>
 			<bean name="#listLast(variables.componentPath,'.')#" path="#variables.componentPath#">
-				<dbtable name="#variables.table#" type="mysql" dsn="#variables.dsn#">
+				<dbtable name="#variables.table#" type="mysql">
 				<cfloop query="variables.tableMetadata">
 					<column name="#variables.tableMetadata.column_name#"
 							type="<cfif variables.tableMetadata.type_name EQ 'char' AND variables.tableMetadata.length EQ 35 AND listFind(variables.primaryKeyList,variables.tableMetadata.column_name)>uuid<cfelse>#translateDataType(variables.tableMetadata.type_name)#</cfif>"

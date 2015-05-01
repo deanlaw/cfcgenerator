@@ -3,8 +3,6 @@
 <generator>
 	<bean fileNameAppend="" fileType="cfc">
 		<include file="setMemento.xsl" />
-		<include file="validate.xsl" />
-		<include file="getset.xsl" />
 		<include file="dump.xsl" />
 	</bean>
 	<dao fileNameAppend="DAO" filetype="cfc">
